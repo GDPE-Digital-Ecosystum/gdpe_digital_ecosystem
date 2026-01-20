@@ -1,0 +1,519 @@
+{
+  "config": {
+    "primaryColor": "#F54927",
+    "secondaryColor": "#f97316",
+    "accentColor": "#eff6ff"
+  },
+  "site": {
+    "title": "Aryan Patel | Mission Punsari 2026",
+    "description": "The official website of Aryan Patel documenting the transformation of Punsari village."
+  },
+  "navbar": {
+    "logoAvatar": "/images/logoAvatar.png",
+    "name": "Aryan Patel",
+    "subtext": "Mission Punsari 2026",
+    "links": [
+      {
+        "name": "Home",
+        "href": "/"
+      },
+      {
+        "name": "Geography",
+        "href": "/geography"
+      },
+      {
+        "name": "History",
+        "href": "/history"
+      },
+      {
+        "name": "Economy",
+        "href": "/economy"
+      },
+      {
+        "name": "News",
+        "href": "/news"
+      }
+    ],
+    "mobileHeader": "Navigation",
+    "mobileFooterLabel": "Official Connect"
+  },
+  "home": {
+    "hero": {
+      "badge": "Model Village Of India",
+      "titlePart1": "Gramin",
+      "titlePart2": "Shetra ki,",
+      "titlePart3": "Nayi",
+      "titlePart4": "Awaaz.",
+      "description": "Transforming Punsari into a Global Benchmark where technology meets tradition.",
+      "stats": [
+        {
+          "label": "Financial Status",
+          "value": "₹75L+ Surplus"
+        },
+        {
+          "label": "Security",
+          "value": "CCTV Enabled"
+        },
+        {
+          "label": "Energy",
+          "value": "Solar Grid"
+        }
+      ],
+      "images": [
+        "/images/home3.png",
+        "/images/home2.png",
+        "/images/news3.png",
+        "https://res.cloudinary.com/dpccapers/image/upload/v1767774293/WhatsApp_Image_2026-01-07_at_12.47.58_PM_zgcqwp.jpg"
+      ]
+    },
+    "awards": [
+      "Best Gram Panchayat Gujarat",
+      "Nirmal Gram Puraskar",
+      "Swarnim Gram Award",
+      "ISO 9001:2008 Certified"
+    ],
+    "leader": {
+      "badge": "The Face Of Change",
+      "name": "Aryan Patel",
+      "quote": "Development is not a favor to the people; it is the duty of the leadership.",
+      "heading": "The Architect of Modern Governance",
+      "bio1": "Under the visionary guidance of the Patel family, Punsari transitioned from a debt of ₹1 Lakh in 2006 to a surplus of ₹75 Lakhs today, without a single penny from NGOs or NRI funding.",
+      "bio2": "Aryan Patel believes in **Land Monetization** and **Self-Sustainability**. By auctioning panchayat land for residential use, he generated the seed capital needed to build RO plants, smart schools, and digital grids.",
+      "features": [
+        {
+          "title": "Revenue Innovation",
+          "desc": "Utilizing 95% tax collection efficiency for local development projects."
+        },
+        {
+          "title": "Safe Village",
+          "desc": "Zero theft recorded since 2021 due to tech-driven surveillance."
+        }
+      ],
+      "images": {
+        "main": "/images/architect.png",
+        "secondary": "/images/architect2.png",
+        "secondaryLabel": "Public Meeting 2025"
+      }
+    },
+    "pillars": {
+      "title": "Strategic Pillars",
+      "subtitle": "Sustainable Infrastructure Framework",
+      "items": [
+        {
+          "title": "Pure RO Water",
+          "desc": "Mineral water at ₹4/20L. 100% piped connectivity to every home.",
+          "img": "/images/pillars1.png"
+        },
+        {
+          "title": "Digital Education",
+          "desc": "Smart boards, zero-dropout rate, and air-conditioned libraries.",
+          "img": "/images/pillars2.png"
+        },
+        {
+          "title": "Atal Express",
+          "desc": "Village bus service. Free for students, ₹3 for others per trip.",
+          "img": "/images/pillars3.png"
+        },
+        {
+          "title": "Smart Broadcast",
+          "desc": "120 speakers connected to the Sarpanch office for live updates.",
+          "img": "/images/pillars4.png"
+        },
+        {
+          "title": "Women Economic Wing",
+          "desc": "111 Sakhi Mandals empowering 1200+ rural women entrepreneurs.",
+          "img": "/images/pillars5.png"
+        },
+        {
+          "title": "Safe Governance",
+          "desc": "24x7 CCTV monitoring for streets, schools, and public assets.",
+          "img": "/images/pillars6.png"
+        }
+      ]
+    },
+    "collage": {
+      "title": "Life In Punsari",
+      "subtitle": "Documenting Daily Progress",
+      "archiveLabel": "Archive-2025",
+      "images": [
+        "/images/life1.png",
+        "/images/life2.png",
+        "/images/life5.png",
+        "https://res.cloudinary.com/dpccapers/image/upload/v1767774290/WhatsApp_Image_2026-01-07_at_12.47.47_PM_1_ipdzzt.jpg",
+        "/images/life4.png",
+        "/images/life3.png"
+      ]
+    },
+    "testimonials": {
+      "title": "Voices of The Village.",
+      "subtitle": "Stories from the residents who built this dream together with Aryan Patel.",
+      "list": [
+        {
+          "quote": "Atal Express has changed the lives of women in our dairy sector...",
+          "author": "Sunita Ben",
+          "role": "Sakhi Mandal Lead",
+          "avatar": "/images/avatar1.png"
+        },
+        {
+          "quote": "Our kids now study in air-conditioned smart schools...",
+          "author": "Ramjibhai Kaka",
+          "role": "Local Farmer",
+          "avatar": "/images/avatar2.png"
+        }
+      ]
+    },
+    "stats": {
+      "title": "Financial Discipline.",
+      "quote": "Punsari does not rely on foreign aid. We believe in the power of Indian villages to generate their own wealth through smart administration.",
+      "image": "/images/financialdiscipline.png",
+      "list": [
+        {
+          "label": "Admin Staff",
+          "val": "22 Professionals",
+          "p": "100%"
+        },
+        {
+          "label": "Tax Collection",
+          "val": "95% Annual Recovery",
+          "p": "95%"
+        },
+        {
+          "label": "Infrastructure Growth",
+          "val": "300% In 5 Years",
+          "p": "100%"
+        },
+        {
+          "label": "Youth Employment",
+          "val": "Local Ventures",
+          "p": "80%"
+        }
+      ]
+    },
+    "faq": {
+      "title": "Public Queries",
+      "subtitle": "Addressing Transparency",
+      "questions": [
+        {
+          "q": "Is Punsari funded by NRIs?",
+          "a": "No. All projects are funded through Government schemes and the Panchayat's own generated income (Land auction & Taxes)."
+        },
+        {
+          "q": "How is the water so affordable?",
+          "a": "We run our RO plants on a no-profit model. The electricity is subsidized by our village solar grid."
+        },
+        {
+          "q": "Can other villages replicate this?",
+          "a": "Yes. Our 'Punsari Model' is a standard framework being studied by the World Bank and other state governments."
+        },
+        {
+          "q": "How do you achieve Zero Dropout?",
+          "a": "By providing free bus transport, digital engagement, and regular parent-teacher transparency."
+        }
+      ]
+    }
+  },
+  "geography": {
+    "hero": {
+      "carouselImages": [
+        "https://res.cloudinary.com/dpccapers/image/upload/v1767774287/WhatsApp_Image_2026-01-07_at_12.47.42_PM_uijm9a.jpg",
+        "https://res.cloudinary.com/dpccapers/image/upload/v1767774287/WhatsApp_Image_2026-01-07_at_12.47.45_PM_1_pua2kn.jpg",
+        "https://res.cloudinary.com/dpccapers/image/upload/v1767774293/WhatsApp_Image_2026-01-07_at_12.47.58_PM_zgcqwp.jpg"
+      ],
+      "title": "GEOGRAPHY",
+      "subtext": "Administrative Territorial Mapping"
+    },
+    "metrics": {
+      "title": "Vital Metrics",
+      "coords": {
+        "lat": "23.63° N",
+        "lon": "72.97° E"
+      },
+      "statsList": [
+        {
+          "l": "Managed Ha",
+          "v": "1240 Hectares"
+        },
+        {
+          "l": "Ward Structure",
+          "v": "12 Administrative"
+        },
+        {
+          "l": "MSL Elevation",
+          "v": "124 Meters"
+        },
+        {
+          "l": "Drainage",
+          "v": "100% Gravity"
+        }
+      ],
+      "strategy": {
+        "badge": "Strategy",
+        "quote": "\"GIS mapping ensures every household is within a 5-minute reach of essential village infrastructure.\""
+      }
+    },
+    "connectivity": {
+      "title": "Connectivity",
+      "destinations": [
+        {
+          "label": "State Capital",
+          "val": "Ahmedabad (82KM)"
+        },
+        {
+          "label": "Admin Block",
+          "val": "Himmatnagar (10KM)"
+        }
+      ],
+      "image": "https://res.cloudinary.com/dpccapers/image/upload/v1767774287/WhatsApp_Image_2026-01-07_at_12.47.45_PM_1_pua2kn.jpg"
+    },
+    "terrain": {
+      "image": "https://res.cloudinary.com/dpccapers/image/upload/v1767784998/ChatGPT_Image_Jan_7_2026_04_52_10_PM_xqujx1.png",
+      "title": "Plateau",
+      "accent": "Basin.",
+      "description": "Natural topography engineered for efficiency. Every ward is integrated with gravity-driven drainage.",
+      "stats": [
+        {
+          "val": "0%",
+          "label": "Logging"
+        },
+        {
+          "val": "1,500+",
+          "label": "Plants"
+        }
+      ]
+    },
+    "climate": {
+      "title": "Climate Audit",
+      "desc": "Operating in a semi-arid zone, Punsari achieves year-round production through 73 recharge wells and crop rotation.",
+      "metrics": [
+        "42°C Peak",
+        "300MM Rain"
+      ],
+      "soilImage": "https://res.cloudinary.com/dpccapers/image/upload/v1767774293/WhatsApp_Image_2026-01-07_at_12.47.58_PM_zgcqwp.jpg",
+      "soilTitle": "Sandy Loam Mix",
+      "soilDesc": "ISO verified soil health profile providing the perfect foundation for Golden Wheat exports and Long-staple Cotton.",
+      "soilBadge": "Verified Record"
+    },
+    "crops": {
+      "title": "Agrarian",
+      "accent": "Assets.",
+      "audit": "NMAET Audit Data",
+      "items": [
+        {
+          "t": "Golden Wheat",
+          "d": "High-yield Rabi harvest variety via automated canal networks.",
+          "img": "/images/geography2.jpeg",
+          "tag": "Rabi Season"
+        },
+        {
+          "t": "White Cotton",
+          "d": "Primary Cash Crop contributing to 60% of village agri-revenue.",
+          "img": "/images/geography3.jpeg",
+          "tag": "Kharif Export"
+        },
+        {
+          "t": "Scientific Bio",
+          "d": "Winter seed rotation ensuring 100% land utility.",
+          "img": "https://res.cloudinary.com/dpccapers/image/upload/v1767774292/WhatsApp_Image_2026-01-07_at_12.47.57_PM_1_e556te.jpg",
+          "tag": "Bio-Rotation"
+        }
+      ]
+    }
+  },
+  "history": {
+    "header": {
+      "badge": "The Legacy of Punsari",
+      "title": "Legacy &",
+      "subtitle": "Milestones."
+    },
+    "mainImage": "/images/history1.png",
+    "timeline": [
+      {
+        "year": "1955",
+        "title": "Establishment",
+        "desc": "Punsari Gram Panchayat was officially formed, starting with basic administrative roots."
+      },
+      {
+        "year": "2006",
+        "title": "The Revolution",
+        "desc": "Shri Himanshu Patel took charge at age 23. The vision for 'City Facilities' was born."
+      },
+      {
+        "year": "2011",
+        "title": "Digital Leap",
+        "desc": "Village became 100% Wi-Fi enabled and secured via a full CCTV network."
+      },
+      {
+        "year": "2026",
+        "title": "Mission Surplus",
+        "desc": "Under Aryan Patel, the village achieved ₹75L surplus with 100% literacy."
+      }
+    ],
+    "gallery": [
+      "/images/history2.png",
+      "/images/history3.png",
+      "/images/history4.png"
+    ]
+  },
+  "economy": {
+    "hero": {
+      "badge": "Self-Sustainability Model",
+      "title": "The Village",
+      "subtitle": "Economy."
+    },
+    "featuredCard": {
+      "heading": "Zero External Funding.",
+      "description": "Punsari does not rely on NRIs or NGOs. Our economy is built on local tax efficiency (95%), land monetization, and a thriving dairy ecosystem.",
+      "image": "/images/e.png",
+      "stats": [
+        {
+          "label": "Annual Revenue Growth",
+          "value": "+400%"
+        },
+        {
+          "label": "Active Sakhi Mandals",
+          "value": "111 Units"
+        }
+      ]
+    },
+    "pillars": [
+      {
+        "title": "Dairy",
+        "val": "12,000L",
+        "desc": "Daily milk collection through automated cooperatives."
+      },
+      {
+        "title": "RO Plant",
+        "val": "₹4/20L",
+        "desc": "Self-sustaining water model with daily cash surplus."
+      },
+      {
+        "title": "Retail",
+        "val": "8 Shops",
+        "desc": "Panchayat shopping centres run by Sakhi Mandals."
+      },
+      {
+        "title": "Transport",
+        "val": "₹3/Trip",
+        "desc": "Atal Express revenue covers 100% of fuel costs."
+      }
+    ]
+  },
+  "news": {
+    "header": {
+      "badge": "Official Bulletin",
+      "title": "Media &",
+      "subtitle": "Press.",
+      "yearLabel": "Current Year",
+      "year": "2026"
+    },
+    "breakingNews": [
+      {
+        "id": 1,
+        "title": "Punsari Leads National Digital Literacy Rankings 2026",
+        "desc": "Under Aryan Patel's leadership, Punsari achieves 100% digital proficiency among youth and elders alike.",
+        "image": "/images/news1.png"
+      },
+      {
+        "id": 2,
+        "title": "ISO 9001:2026 Re-Certification Awarded To Gram Panchayat",
+        "desc": "Official auditors praise the transparency and data management systems of the Punsari Strategic Cell.",
+        "image": "/images/news2.png"
+      },
+      {
+        "id": 3,
+        "title": "New Waste-To-Energy Plant Operationalized",
+        "desc": "The ₹85 Lakh plant starts generating electricity for the village street-light grid.",
+        "image": "https://res.cloudinary.com/dpccapers/image/upload/v1767774293/WhatsApp_Image_2026-01-07_at_12.47.58_PM_zgcqwp.jpg"
+      }
+    ],
+    "newsGrid": [
+      {
+        "id": 1,
+        "date": "Jan 12, 2026",
+        "title": "Women Entrepreneurs Scaling Dairy Operations",
+        "desc": "111 Sakhi Mandals report a 40% increase in monthly revenue following the latest automation workshop led by the Strategic Cell.",
+        "image": "/images/news4.png"
+      },
+      {
+        "id": 2,
+        "date": "Jan 10, 2026",
+        "title": "Atal Express Buses Go Electric This Quarter",
+        "desc": "To further sustainability, the village council approves the transition of the student bus fleet to zero-emission electric vehicles.",
+        "image": "/images/news5.png"
+      },
+      {
+        "id": 3,
+        "date": "Jan 08, 2026",
+        "title": "Smart Schools Achieve 100% Digital Proficiency",
+        "desc": "A milestone reached: Every student from Std VI to VIII has successfully cleared the 'Basic Coding & Web Design' certification.",
+        "image": "/images/news6.png"
+      },
+      {
+        "id": 4,
+        "date": "Jan 05, 2026",
+        "title": "New RO Plant Extension For Industrial Ward",
+        "desc": "Construction begins for the third RO water purification unit to meet the rising demand for purified water in the upcoming dairy cluster.",
+        "image": "/images/news7.png"
+      },
+      {
+        "id": 5,
+        "date": "Jan 02, 2026",
+        "title": "Sabarkantha District Praises Punsari's Solar Model",
+        "desc": "District officials visit Punsari to study how the village-wide solar street lighting system has cut electricity costs by 85%.",
+        "image": "/images/news8.png"
+      },
+      {
+        "id": 6,
+        "date": "Dec 28, 2025",
+        "title": "Public Address System Upgrade Completed",
+        "desc": "120 new high-fidelity waterproof speakers installed across all village internal roads for seamless live news and emergency broadcasts.",
+        "image": "/images/news9.png"
+      }
+    ]
+  },
+  "footer": {
+    "description": "Punsari Gram Panchayat is India's No.1 self-reliant \"Smart Village\". We believe in professional administration and transparent governance.",
+    "socials": {
+      "facebook": "#",
+      "instagram": "#",
+      "twitter": "#",
+      "youtube": "#"
+    },
+    "address": {
+      "title": "Official Address",
+      "lines": "Gram Panchayat Punsari,\nTaluka: Himmatnagar,\nSabarkantha, Gujarat - 383001",
+      "email": "office@aryanpunsari.in",
+      "timing": "Mon - Sat: 10:00 AM - 06:00 PM"
+    },
+    "helplines": {
+      "title": "Direct Helplines",
+      "items": [
+        {
+          "label": "Gram Sevak Office",
+          "number": "+91 94220-XXXXX",
+          "type": "blue"
+        },
+        {
+          "label": "RO Plant Service",
+          "number": "+91 99044-XXXXX",
+          "type": "orange"
+        },
+        {
+          "label": "Emergency Help",
+          "number": "Dial: 100 / 108",
+          "type": "green"
+        }
+      ]
+    },
+    "navTitle": "Quick Navigation",
+    "badges": [
+      "ISO Certified",
+      "Best Panchayat"
+    ],
+    "copyright": "© 2026 Strategic Development Cell | Aryan Patel Campaign",
+    "bottomLinks": [
+      "Privacy Policy",
+      "Admin Login"
+    ]
+  }
+}
