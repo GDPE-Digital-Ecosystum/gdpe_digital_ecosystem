@@ -5,10 +5,11 @@
 // export async function POST(req: Request) {
 //     try {
 //         const body = await req.json();
-//         const {
-//             slug, themeColor, bio, banner, leader_name, avatar,
+//         const { 
+//             slug, leader_name, bio, banner, themeColor,
 //             history, geography, economy,
-//             historyImg, geographyImg, economyImg // 👈 Naye Image fields
+//             historyImg, geographyImg, economyImg,
+//             avatar, avatarPos, avatarZoom, manifestoImg 
 //         } = body;
 
 //         const client = await clientPromise;
@@ -16,21 +17,24 @@
 
 //         await db.collection("panchayats").updateOne(
 //             { slug: slug },
-//             {
-//                 $set: {
-//                     "leader_name": leader_name, // 👈 Naya field
-//                     "config.avatar": avatar,
+//             { 
+//                 $set: { 
+//                     leader_name,
+//                     bio,
+//                     status: "active",
 //                     "config.themeColor": themeColor,
 //                     "config.banner": banner,
-//                     "bio": bio,
-//                     "history": history,
-//                     "geography": geography,
-//                     "economy": economy,
+//                     "config.avatar": avatar,
+//                     "config.avatarPos": avatarPos,
+//                     "config.avatarZoom": avatarZoom,
+//                     "config.manifestoImg": manifestoImg,
 //                     "config.historyImg": historyImg,
 //                     "config.geographyImg": geographyImg,
 //                     "config.economyImg": economyImg,
-//                     "status": "active"
-//                 }
+//                     history,
+//                     geography,
+//                     economy
+//                 } 
 //             }
 //         );
 
@@ -50,7 +54,8 @@ export async function POST(req: Request) {
             slug, leader_name, bio, banner, themeColor,
             history, geography, economy,
             historyImg, geographyImg, economyImg,
-            avatar, avatarPos, avatarZoom, manifestoImg 
+            avatar, avatarPos, avatarZoom, manifestoImg,
+            gallery,videos // 👈 Ye array dashboard se aa raha hai
         } = body;
 
         const client = await clientPromise;
@@ -72,6 +77,8 @@ export async function POST(req: Request) {
                     "config.historyImg": historyImg,
                     "config.geographyImg": geographyImg,
                     "config.economyImg": economyImg,
+                    "config.gallery": gallery || [], // 👈 Gallery yahan save ho rahi hai
+                    "config.videos": videos || [], // 👈 Naya field videos save karne ke liye
                     history,
                     geography,
                     economy
