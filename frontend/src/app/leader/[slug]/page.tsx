@@ -1,230 +1,11 @@
 
-// "use client";
-// import { useState, useEffect } from "react";
-// import { useParams } from "next/navigation";
-// import { 
-//   Palette, FileText, Send, Sparkles, Globe, User, 
-//   Image as ImageIcon, Users, Landmark, Map as MapIcon, TrendingUp, Phone, MessageSquare, Move, Camera, Video
-// } from "lucide-react";
-// import { motion, AnimatePresence } from "framer-motion";
-
-
-// export default function LeaderDashboard() {
-//     const params = useParams();
-//     const slug = params.slug;
-
-//     const [activeTab, setActiveTab] = useState("branding"); 
-//     const [leaderName, setLeaderName] = useState("");
-//     const [avatar, setAvatar] = useState("");
-//     const [avatarPos, setAvatarPos] = useState(50);
-//     const [avatarZoom, setAvatarZoom] = useState(1);
-//     const [color, setColor] = useState("#0055a4");
-//     const [banner, setBanner] = useState("");
-//     const [bio, setBio] = useState("");
-//     const [manifestoImg, setManifestoImg] = useState("");
-//     const [history, setHistory] = useState("");
-//     const [historyImg, setHistoryImg] = useState("");
-//     const [geography, setGeography] = useState("");
-//     const [geoImg, setGeoImg] = useState("");
-//     const [economy, setEconomy] = useState("");
-//     const [ecoImg, setEcoImg] = useState("");
-//     const [gallery, setGallery] = useState<string[]>(["", "", "", "", "", ""]);
-//     const [videos, setVideos] = useState<string[]>(["", "", "", ""]);
-    
-//     const [voters, setVoters] = useState([]);
-//     const [loading, setLoading] = useState(false);
-//     const [fetching, setFetching] = useState(true);
-
-//     const LIMIT = 800;
-
-//     const templates = {
-//         vikas: "मेरा संकल्प: आपकी ग्राम पंचायत को राजस्थान की सबसे आधुनिक और डिजिटल पंचायत बनाना।",
-//         professional: "Vision 2026: Smart governance and 100% digital literacy for our Gram Panchayat.",
-//         emotional: "राम-राम सा! मैं आपका बेटा, आपका भाई बनकर सेवा करूँगा।"
-//     };
-
-//     useEffect(() => {
-//         const fetchAllData = async () => {
-//             try {
-//                 const res = await fetch(`/api/site/${slug}`);
-//                 const data = await res.json();
-//                 if (data) {
-//                     setLeaderName(data.leader_name || "");
-//                     setAvatar(data.config?.avatar || "");
-//                     setAvatarPos(data.config?.avatarPos ?? 50);
-//                     setAvatarZoom(data.config?.avatarZoom ?? 1);
-//                     setColor(data.config?.themeColor || "#0055a4");
-//                     setBio(data.bio || "");
-//                     setManifestoImg(data.config?.manifestoImg || "");
-//                     setBanner(data.config?.banner || "");
-//                     setHistory(data.history || "");
-//                     setHistoryImg(data.config?.historyImg || "");
-//                     setGeography(data.geography || "");
-//                     setGeoImg(data.config?.geographyImg || "");
-//                     setEconomy(data.economy || "");
-//                     setEcoImg(data.config?.economyImg || "");
-//                     setGallery(data.config?.gallery || ["", "", "", "", "", ""]);
-//                     setVideos(data.config?.videos || ["", "", "", ""]);
-//                 }
-//                 const voterRes = await fetch(`/api/site/support?slug=${slug}`);
-//                 const voterData = await voterRes.json();
-//                 if (Array.isArray(voterData)) setVoters(voterData);
-//             } catch (err) { console.error(err); }
-//             finally { setFetching(false); }
-//         };
-//         if (slug) fetchAllData();
-//     }, [slug]);
-
-//     const handleUpdate = async () => {
-//         setLoading(true);
-//         try {
-//             await fetch("/api/leader/update", {
-//                 method: "POST",
-//                 headers: { "Content-Type": "application/json" },
-//                 body: JSON.stringify({ 
-//                     slug, leader_name: leaderName, bio, banner, themeColor: color,
-//                     history, geography, economy, historyImg, geographyImg: geoImg, economyImg: ecoImg,
-//                     avatar, avatarPos, avatarZoom, manifestoImg,
-//                     gallery: gallery.filter(u => u.trim() !== ""),
-//                     videos: videos.filter(v => v.trim() !== "")
-//                 }),
-//             });
-//             alert("🚀 Update Successful!");
-//         } catch (err) { alert("Error!"); }
-//         setLoading(false);
-//     };
-
-//     const renderEditor = (label: string, value: string, setter: any, img: string, imgSetter: any) => (
-//         <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
-//             <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
-//                 <h3 className="text-xl font-bold uppercase mb-4 flex items-center gap-3"><ImageIcon size={20}/> {label} Image URL</h3>
-//                 <input type="text" value={img} onChange={(e)=>imgSetter(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 text-xs font-mono" placeholder="Image link..."/>
-//             </div>
-//             <div className="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
-//                 <div className="flex justify-between items-center mb-6">
-//                     <h3 className="text-xl font-bold uppercase">{label} Content</h3>
-//                     <span className="text-[10px] font-black">{value.length} / {LIMIT}</span>
-//                 </div>
-//                 <textarea value={value} onChange={(e)=>setter(e.target.value.substring(0, LIMIT))} className="w-full p-8 border rounded-2xl h-64 text-lg bg-slate-50/20" />
-//             </div>
-//         </motion.div>
-//     );
-
-//     if (fetching) return <div className="h-screen flex items-center justify-center font-black animate-pulse text-blue-600">LOADING...</div>;
-
-//     return (
-//         <div className="min-h-screen bg-[#f8fafc] flex">
-//             <div className="w-72 bg-[#0f172a] text-white p-8 flex flex-col shadow-2xl sticky top-0 h-screen">
-//                 <h2 className="text-2xl font-black tracking-tighter text-blue-500 italic mb-8">RAJGRAM</h2>
-//                 <nav className="flex-1 space-y-1 overflow-y-auto">
-//                     {[
-//                         { id: 'branding', label: 'Identity', icon: <Palette size={16}/> },
-//                         { id: 'manifesto', label: 'Manifesto', icon: <Sparkles size={16}/> },
-//                         { id: 'history', label: 'History', icon: <Landmark size={16}/> },
-//                         { id: 'geography', label: 'Geography', icon: <MapIcon size={16}/> },
-//                         { id: 'economy', label: 'Economy', icon: <TrendingUp size={16}/> },
-//                         { id: 'gallery', label: 'Gallery', icon: <Camera size={16}/> },
-//                         { id: 'videos', label: 'Videos', icon: <Video size={16}/> },
-//                         { id: 'voters', label: 'Supporters', icon: <Users size={16}/> }
-//                     ].map((t) => (
-//                         <button key={t.id} onClick={() => setActiveTab(t.id)} className={`w-full flex items-center gap-4 p-4 rounded-xl transition-all font-bold uppercase text-[10px] tracking-widest ${activeTab === t.id ? 'bg-blue-600' : 'text-slate-500 hover:bg-slate-800'}`}>
-//                             {t.icon} {t.label}
-//                         </button>
-//                     ))}
-//                 </nav>
-//                 <button onClick={handleUpdate} disabled={loading} className="mt-4 w-full bg-green-600 p-4 rounded-xl font-black uppercase text-[10px]">{loading ? "Saving..." : "Save All"}</button>
-//             </div>
-
-//             <div className="flex-1 p-12 overflow-y-auto">
-//                 <AnimatePresence mode="wait">
-//                     {activeTab === 'branding' && (
-//                         <motion.div key="brand" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 max-w-4xl">
-//                             <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
-//                                 <h3 className="text-xl font-bold uppercase mb-8 border-l-4 border-blue-600 pl-4 text-slate-800">Branding</h3>
-//                                 <div className="grid md:grid-cols-2 gap-10">
-//                                     <div className="space-y-6">
-//                                         <input type="text" value={leaderName} onChange={(e)=>setLeaderName(e.target.value)} className="w-full p-4 border rounded-xl font-bold bg-slate-50 text-slate-900" placeholder="Full Name"/>
-//                                         <input type="text" value={avatar} onChange={(e)=>setAvatar(e.target.value)} className="w-full p-4 border rounded-xl font-mono text-xs bg-slate-50 text-slate-900" placeholder="Avatar URL"/>
-//                                         <div className="flex items-center gap-6"><input type="color" value={color} onChange={(e)=>setColor(e.target.value)} className="w-16 h-16 rounded-xl cursor-pointer"/><code className="text-xl font-black text-blue-600 uppercase">{color}</code></div>
-//                                     </div>
-//                                     <div className="bg-slate-50 rounded-[2rem] p-6 border-2 border-dashed flex flex-col items-center">
-//                                         <div className="w-32 h-32 rounded-full border-4 border-white shadow-xl overflow-hidden mb-4"><img src={avatar || "https://via.placeholder.com/150"} style={{ objectFit: "cover", objectPosition: `center ${avatarPos}%`, transform: `scale(${avatarZoom})` }} className="w-full h-full" /></div>
-//                                         <input type="range" min="0" max="100" value={avatarPos} onChange={(e)=>setAvatarPos(parseInt(e.target.value))} className="w-full accent-blue-600 mb-2" />
-//                                         <input type="range" min="1" max="3" step="0.1" value={avatarZoom} onChange={(e)=>setAvatarZoom(parseFloat(e.target.value))} className="w-full accent-green-600" />
-//                                     </div>
-//                                 </div>
-//                             </div>
-//                             <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100">
-//                                 <h3 className="text-xl font-bold uppercase mb-4 flex items-center gap-3 text-slate-800"><ImageIcon size={20}/> Hero Photo</h3>
-//                                 <input type="text" value={banner} onChange={(e)=>setBanner(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 text-slate-900 text-xs" placeholder="Hero Image URL"/>
-//                             </div>
-//                         </motion.div>
-//                     )}
-
-//                     {activeTab === 'manifesto' && (
-//                         <motion.div key="mani" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-8 max-w-4xl">
-//                             <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100 text-slate-800">
-//                                 <h3 className="text-xl font-bold uppercase mb-6">Manifesto Image</h3>
-//                                 <input type="text" value={manifestoImg} onChange={(e)=>setManifestoImg(e.target.value)} className="w-full p-4 border rounded-xl bg-slate-50 text-slate-900 text-xs" placeholder="Manifesto image URL"/>
-//                             </div>
-//                             <div className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100 text-slate-800">
-//                                 <div className="flex gap-2 mb-6">
-//                                     {['vikas', 'professional', 'emotional'].map(t => (
-//                                         <button key={t} onClick={()=>setBio(templates[t as keyof typeof templates])} className="px-4 py-2 bg-slate-100 border rounded-lg text-[9px] font-black uppercase text-slate-700 hover:bg-blue-600 hover:text-white">{t}</button>
-//                                     ))}
-//                                 </div>
-//                                 <textarea value={bio} onChange={(e)=>setBio(e.target.value.substring(0, LIMIT))} className="w-full p-8 border rounded-[2rem] h-80 text-lg bg-slate-50/20 text-slate-900" />
-//                             </div>
-//                         </motion.div>
-//                     )}
-
-//                     {activeTab === 'history' && renderEditor("History", history, setHistory, historyImg, setHistoryImg)}
-//                     {activeTab === 'geography' && renderEditor("Geography", geography, setGeography, geoImg, setGeoImg)}
-//                     {activeTab === 'economy' && renderEditor("Economy", economy, setEconomy, ecoImg, setEcoImg)}
-                    
-//                     {activeTab === 'gallery' && (
-//                         <motion.div key="gal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100 max-w-4xl text-slate-800">
-//                             <h3 className="text-xl font-bold uppercase mb-8 flex items-center gap-3"><Camera className="text-blue-600" size={24}/> Gallery Photos</h3>
-//                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                                 {gallery.map((url, i) => (
-//                                     <input key={i} type="text" value={url} onChange={(e) => { const n = [...gallery]; n[i] = e.target.value; setGallery(n); }} className="p-3 border rounded-xl bg-slate-50 text-slate-900 text-xs" placeholder={`Photo #${i+1} URL`} />
-//                                 ))}
-//                             </div>
-//                         </motion.div>
-//                     )}
-
-//                     {activeTab === 'videos' && (
-//                         <motion.div key="vid" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-white p-10 rounded-[2.5rem] shadow-xl border border-slate-100 max-w-4xl text-slate-800">
-//                             <h3 className="text-xl font-bold uppercase mb-8 flex items-center gap-3"><Video className="text-red-600" size={24}/> YouTube Links</h3>
-//                             <div className="space-y-4">
-//                                 {videos.map((url, i) => (
-//                                     <input key={i} type="text" value={url} onChange={(e) => { const n = [...videos]; n[i] = e.target.value; setVideos(n); }} className="w-full p-3 border rounded-xl bg-slate-50 text-slate-900 text-xs" placeholder={`YouTube Link #${i+1}`} />
-//                                 ))}
-//                             </div>
-//                         </motion.div>
-//                     )}
-
-//                     {activeTab === 'voters' && (
-//                         <div className="bg-white rounded-[2rem] shadow-2xl overflow-hidden max-w-5xl text-slate-900">
-//                             <table className="w-full text-left">
-//                                 <thead className="bg-slate-50 border-b"><tr className="text-[10px] font-black uppercase text-slate-400"><th className="p-8">Supporter</th><th className="p-8">Contact</th><th className="p-8">Date</th></tr></thead>
-//                                 <tbody className="divide-y">{voters.map((v: any, i) => (
-//                                     <tr key={i} className="hover:bg-slate-50"><td className="p-8 font-bold">{v.name}</td><td className="p-8 font-mono text-blue-600">{v.phone}</td><td className="p-8 text-xs">{new Date(v.date).toLocaleDateString()}</td></tr>
-//                                 ))}</tbody>
-//                             </table>
-//                         </div>
-//                     )}
-//                 </AnimatePresence>
-//             </div>
-//         </div>
-//     );
-// }
-
 "use client";
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Palette, FileText, Send, Sparkles, Globe, ImageIcon, Users, Landmark, Map, TrendingUp, Camera, Video, Loader2, UploadCloud } from "lucide-react";
+import { Palette, FileText, Send, Sparkles, Globe, ImageIcon, Users, Landmark, Map, TrendingUp, Camera, Video, Loader2, UploadCloud, LogOut } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { signOut } from "next-auth/react";
+// import { signOut } from "next-auth/react";
 
 export default function LeaderDashboard() {
     const params = useParams();
@@ -346,6 +127,12 @@ export default function LeaderDashboard() {
                 </nav>
                 <div className="mt-4 pt-4 border-t border-slate-800 space-y-3">
                     <button onClick={save} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 p-4 rounded-xl font-black uppercase text-[10px] tracking-widest">{loading?"SAVING...":"SAVE CHANGES"}</button>
+                    <button 
+                    onClick={() => signOut({ callbackUrl: "/login" })} 
+                    className="w-full p-4 bg-red-600/10 text-red-500 rounded-xl font-black uppercase text-[10px] hover:bg-red-600 hover:text-white transition-all flex items-center justify-center gap-2"
+                >
+                    <LogOut size={16}/> Logout Leader
+                </button>
                     <a href={`/site/${slug}`} target="_blank" className="flex items-center justify-between p-4 bg-slate-800 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-slate-700">View Site <Globe size={14}/></a>
                 </div>
             </div>

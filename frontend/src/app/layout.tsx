@@ -58,25 +58,21 @@
 //     </html>
 //   );
 // }
-
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Providers } from "./providers";
 
-const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
-const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"] });
-
-export const metadata: Metadata = {
-  title: "RajGram Digital - Rajasthan Gram Panchayat Hub",
-  description: "Digital Branding Platform for Gram Panchayat Leaders",
+export const metadata = {
+  title: "RajGram Digital",
+  description: "Leader Branding Platform",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {/* Children mein hi hamara MasterTemplate load hoga */}
-        {children}
+      <body className="antialiased">
+        <Providers>
+          {children}
+        </Providers>
       </body>
     </html>
   );

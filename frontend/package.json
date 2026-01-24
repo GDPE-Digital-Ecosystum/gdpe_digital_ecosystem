@@ -9,11 +9,14 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "bcryptjs": "^3.0.3",
     "dotenv": "^17.2.3",
     "framer-motion": "^12.27.0",
     "lucide-react": "^0.562.0",
     "mongodb": "^7.0.0",
+    "mongoose": "^9.1.5",
     "next": "16.1.2",
+    "next-auth": "^4.24.13",
     "next-cloudinary": "^6.17.5",
     "react": "19.2.3",
     "react-dom": "19.2.3"
