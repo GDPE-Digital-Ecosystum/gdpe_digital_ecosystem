@@ -7,6 +7,7 @@ import {
   User, Phone, MessageCircle, Menu, UserCheck, ChevronRight, 
   Calendar, Heart, Camera, Video, Play, ShieldAlert, XCircle, Image as LucideImage 
 } from "lucide-react";
+import Footer from "./footer";
 
 export default function LeaderWebsiteClient({ panchayat, news }: any) {
   const [isMounted, setIsMounted] = useState(false);
@@ -279,9 +280,8 @@ if (panchayat?.status === "suspended") {
         )}
       </AnimatePresence>
 
-      <footer className="py-24 bg-slate-900 text-white text-center rounded-t-[5rem]">
-        <Heart className="mx-auto mb-6 text-red-500" fill="currentColor" size={32}/><h3 className="text-3xl font-black uppercase mb-4 tracking-widest italic">{name}</h3><p className="text-[10px] text-slate-500 font-bold uppercase tracking-[10px]">RAJGRAM ENGINE © 2026</p>
-      </footer>
+      {/* 10. PREMIUM INFORMATIVE FOOTER */}
+      <Footer panchayat={panchayat} />
 
       <style jsx global>{`
         @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
