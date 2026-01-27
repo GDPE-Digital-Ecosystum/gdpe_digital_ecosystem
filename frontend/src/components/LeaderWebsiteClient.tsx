@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Star, Landmark, Map, TrendingUp, Quote, X, Send, 
   User, Phone, MessageCircle, Menu, UserCheck, ChevronRight, 
-  Calendar, Heart, Camera, Video, Play, ShieldAlert, XCircle, Image as LucideImage 
+  Calendar, Heart, Camera, Video, Play, ShieldAlert, XCircle, Image as LucideImage, 
+  Globe
 } from "lucide-react";
 import Footer from "./footer";
 
@@ -243,24 +244,79 @@ if (panchayat?.status === "suspended") {
         </div>
       </section>
 
-      {/* 8. NEWS SECTION (WP-API IMAGE FIX) */}
-      <section id="news" className="py-24 px-4 bg-white scroll-mt-24">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-5xl font-black text-slate-900 uppercase mb-16 underline decoration-8 decoration-blue-50 underline-offset-8" style={{ textDecorationColor: `${themeColor}20` }}>Rajasthan News</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-            {news?.map((item: any) => (
-              <div key={item.id} className="bg-slate-50 rounded-[3rem] border border-slate-100 p-8 shadow-sm hover:shadow-xl transition-all text-left group">
-                <div className="relative h-52 overflow-hidden rounded-[2rem] mb-6 bg-slate-200">
-                    <img src={item.image} className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" alt="N" />
-                </div>
-                <div className="flex items-center gap-2 text-slate-400 text-[10px] font-black uppercase mb-4 tracking-widest"><Calendar size={14} style={{ color: themeColor }}/> {formatDate(item.date)}</div>
-                <h4 className="font-bold text-lg mb-8 line-clamp-2 uppercase text-slate-900 leading-tight" dangerouslySetInnerHTML={{ __html: item.title }}></h4>
-                <a href={item.link} target="_blank" className="text-[10px] font-black uppercase tracking-[3px] flex items-center justify-center gap-2 py-4 px-8 border-2 rounded-2xl hover:bg-slate-900 hover:text-white transition-all">Full Story</a>
+      {/* 8. NEWS SECTION (MODERN & COMPACT) */}
+<section id="news" className="py-20 px-4 bg-slate-50/30 scroll-mt-10">
+  <div className="max-w-7xl mx-auto">
+    
+    {/* Section Header - Clean Minimalist */}
+    <div className="flex items-end justify-between mb-10 border-b-2 border-slate-100 pb-6">
+      <div className="text-left">
+        <p className="text-[10px] font-black uppercase tracking-[5px] mb-2" style={{ color: themeColor }}>Stay Updated</p>
+        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">Latest News</h2>
+      </div>
+      <div className="hidden md:block">
+        <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: themeColor }}></div>
+      </div>
+    </div>
+
+    {/* News Grid - Modern Spacing */}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {news?.map((item: any) => (
+        <div 
+          key={item.id} 
+          className="group relative bg-white rounded-[2rem] border border-slate-200/50 hover:border-transparent shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 overflow-hidden flex flex-col h-full"
+        >
+          {/* Image - Aspect Ratio 16:9 */}
+          <div className="relative aspect-video overflow-hidden">
+            <img 
+              src={item.image} 
+              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
+              alt="News" 
+            />
+            {/* Soft Overlay */}
+            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500"></div>
+          </div>
+
+          {/* Content Area - Compact Padding */}
+          <div className="p-6 flex flex-col flex-1">
+            <div className="flex items-center gap-2 mb-3">
+              <span 
+                className="w-1 h-4 rounded-full" 
+                style={{ backgroundColor: themeColor }}
+              ></span>
+              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                {formatDate(item.date)}
+              </p>
+            </div>
+            
+            <h4 
+              className="font-bold text-lg text-slate-800 leading-snug line-clamp-2 mb-6 group-hover:text-blue-600 transition-colors"
+              dangerouslySetInnerHTML={{ __html: item.title }}
+            ></h4>
+
+            {/* Subtle Action Link */}
+            <div className="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
+              <a 
+                href={item.link} 
+                target="_blank" 
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all group/link"
+                style={{ color: themeColor }}
+              >
+                Read Full Story 
+                <span className="group-hover/link:translate-x-1 transition-transform">→</span>
+              </a>
+              
+              {/* Decorative share/link icon */}
+              <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
+                <Globe size={12} className="text-slate-300 group-hover:text-blue-400" />
               </div>
-            ))}
+            </div>
           </div>
         </div>
-      </section>
+      ))}
+    </div>
+  </div>
+</section>
 
       {/* 9. SUPPORT MODAL */}
       <AnimatePresence>

@@ -18,13 +18,13 @@ export async function GET(req: Request) {
         if (status !== "all") query.status = status;
 
         // 2. Fetch List (Limit 50 taaki speed bani rahe)
-        const list = await db.collection("panchayats").find(query).limit(50).toArray();
+        const list = await db.collection("panchayats_test").find(query).limit(50).toArray();
 
         // 3. Global Stats for the top boxes
         const stats = {
             total: 11075,
-            active: await db.collection("panchayats").countDocuments({ status: "active" }),
-            idle: await db.collection("panchayats").countDocuments({ status: "idle" })
+            active: await db.collection("panchayats_test").countDocuments({ status: "active" }),
+            idle: await db.collection("panchayats_test").countDocuments({ status: "idle" })
         };
 
         return NextResponse.json({ 
@@ -44,7 +44,7 @@ export async function POST(req: Request) {
         const db = client.db("rajgram_db");
 
         if (action === "remove") {
-            await db.collection("panchayats").updateOne(
+            await db.collection("panchayats_test").updateOne(
                 { slug: slug },
                 { $set: { 
                     status: "idle", 
