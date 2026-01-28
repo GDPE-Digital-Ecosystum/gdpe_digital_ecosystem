@@ -481,7 +481,7 @@ export default function LeaderDashboard() {
                             <div className="mt-8 pt-6 border-t border-slate-800 space-y-3">
                                 <button onClick={save} disabled={loading} className="w-full bg-green-600 hover:bg-green-700 p-4 rounded-xl font-black uppercase text-[10px] shadow-lg transition-all">{loading?"SAVING...":"SAVE ALL"}</button>
                                 <button onClick={() => signOut({callbackUrl: '/login'})} className="w-full p-4 bg-red-600/10 text-red-500 rounded-xl font-black uppercase text-[10px] flex items-center justify-center gap-2 hover:bg-red-600 hover:text-white transition-all"><LogOut size={16}/> Logout</button>
-                                <a href={`/${encodeURIComponent(slug)}`} target="_blank" className="flex items-center justify-between p-4 bg-slate-800 rounded-xl font-black uppercase text-[10px] hover:bg-slate-700 transition-all text-blue-400 font-bold italic underline">View Site <Globe size={14}/></a>
+                                <a href={`/${slug}`} target="_blank" className="flex items-center justify-between p-4 bg-slate-800 rounded-xl font-black uppercase text-[10px] hover:bg-slate-700 transition-all text-blue-400 font-bold italic underline">View Site <Globe size={14}/></a>
                             </div>
                         </motion.div>
                     </>
