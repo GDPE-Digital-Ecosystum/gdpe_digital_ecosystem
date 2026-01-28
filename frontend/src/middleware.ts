@@ -155,7 +155,7 @@ export async function middleware(req: NextRequest) {
   const hostname = req.headers.get('host') || '';
   const currentHost = hostname.split(':')[0].split('.')[0];
 
-  if (currentHost === 'localhost' || currentHost === 'rajgram' || currentHost === 'www') {
+  if (currentHost === 'localhost' || currentHost === 'gdpe-digital-ecosystem' || currentHost === 'www') {
     return NextResponse.next()
   }
 
