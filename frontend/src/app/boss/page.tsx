@@ -117,7 +117,7 @@ export default function BossHub() {
                                                 <td className="p-8 text-left text-white"><h4 className="font-black text-lg uppercase leading-none">{gp.name}</h4><p className="text-[10px] text-slate-500 font-bold mt-2 uppercase">{gp.district}</p></td>
                                                 <td><span className={`px-4 py-1 rounded-full text-[9px] font-black uppercase border ${gp.status === 'active' ? 'text-green-500' : gp.status === 'suspended' ? 'text-red-500' : 'text-slate-600'}`}>{gp.status}</span></td>
                                                 <td className="p-8 flex justify-end gap-2 opacity-50 group-hover:opacity-100 transition-all">
-                                                    <a href={`/site/${gp.slug}`} target="_blank" className="p-3 bg-slate-800 rounded-xl hover:bg-blue-600 text-white"><ExternalLink size={16} /></a>
+                                                    <a  href={`/${encodeURIComponent(gp.slug)}`}  target="_blank" className="p-3 bg-slate-800 rounded-xl hover:bg-blue-600 text-white"><ExternalLink size={16} /></a>
                                                     {gp.status === 'active' || gp.status === 'suspended' ? (
                                                         <div className="flex gap-2">
                                                             <button onClick={() => runAction("clear_images", gp.slug)} className="p-3 bg-orange-950 text-orange-500 rounded-xl"><ImageIcon size={14} /></button>
