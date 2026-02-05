@@ -77,7 +77,9 @@ await db.collection("analytics").updateOne(
                         title: post.title.rendered,
                         link: post.link,
                         date: post.date,
-                        image: imageUrl
+                        image: imageUrl,
+                       
+    data: post.excerpt.rendered.replace(/<[^>]*>?/gm, '').substring(0, 150) + "...", 
                     };
                 });
             }

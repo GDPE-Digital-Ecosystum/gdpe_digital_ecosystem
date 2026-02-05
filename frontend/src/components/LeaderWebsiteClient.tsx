@@ -1,35 +1,318 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect, useRef, useMemo } from "react";
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform, useInView } from "framer-motion";
 import { 
-  Star, Landmark, Map, TrendingUp, Quote, X, Send, 
-  User, Phone, MessageCircle, Menu, UserCheck, ChevronRight, 
-  Calendar, Heart, Camera, Video, Play, ShieldAlert, XCircle, Image as LucideImage, 
-  Globe
+  X, Menu, ShieldAlert, ArrowRight, Play, Globe, Camera, Calendar,
+  Landmark, Map, PieChart, Zap, School, HeartPulse, Wifi,
+  ChevronRight,
+  Users,
+  XCircle
 } from "lucide-react";
+
+// --- THREE.JS IMPORTS ---
+import { Canvas, useFrame } from "@react-three/fiber";
+import { Points, PointMaterial, Float, MeshDistortMaterial, Sphere } from "@react-three/drei";
 import Footer from "./footer";
 
-export default function LeaderWebsiteClient({ panchayat, news }: any) {
+// 🔥 OPTIMIZATION COMPONENT: Isse sirf dikhne wala Canvas hi chalega
+const OptimizedCanvas = ({ children, camera = { position: [0, 0, 5], fov: 75 } }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { amount: 0.1 }); // Jab 10% dikhe tabhi chalao
+
+  return (
+    <div ref={ref} className="absolute inset-0 z-0 pointer-events-none">
+      {isInView && (
+        <Canvas 
+          dpr={[1, 1.2]} // Performance ke liye resolution limit
+          gl={{ antialias: false, powerPreference: "high-performance", alpha: true }} 
+          camera={camera}
+        >
+          {children}
+        </Canvas>
+      )}
+    </div>
+  );
+};
+
+// --- 1. THREE.JS: DIGITAL PARTICLES ---
+function ConnectivityNetwork() {
+  const pointsRef = useRef();
+  const particleCount = 1000; // Count thoda kam kiya smoothness ke liye
+  const positions = useMemo(() => {
+    const pos = new Float32Array(particleCount * 3);
+    for (let i = 0; i < particleCount; i++) {
+      pos[i * 3] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 15;
+      pos[i * 3 + 2] = (Math.random() - 0.5) * 15;
+    }
+    return pos;
+  }, []);
+
+  useFrame((state) => {
+    pointsRef.current.rotation.y = state.clock.getElapsedTime() * 0.05;
+  });
+
+  return (
+    <Points ref={pointsRef} positions={positions} stride={3} frustumCulled={false}>
+      <PointMaterial transparent color="#A12A1E" size={0.06} sizeAttenuation={true} depthWrite={false} opacity={0.4} />
+    </Points>
+  );
+}
+
+// --- 2. THREE.JS: LIQUID ORB ---
+// function EnergyOrb() {
+//   return (
+//     <Float speed={3} rotationIntensity={0.5} floatIntensity={0.5}>
+//       <Sphere args={[1, 64, 64]} scale={2.2} position={[0, 1, -3]}>
+//         <MeshDistortMaterial color="#F4EBD0" speed={2} distort={0.3} radius={1} transparent opacity={0.6} />
+//       </Sphere>
+//     </Float>
+//   );
+// }
+
+// --- 3. THREE.JS: HISTORY FRAGMENTS ---
+function HistoryFragments() {
+  const groupRef = useRef();
+  useFrame((state) => { groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1; });
+  return (
+    <group ref={groupRef}>
+      {[...Array(10)].map((_, i) => (
+        <Float key={i} speed={2} rotationIntensity={1} floatIntensity={1}>
+          <mesh position={[(Math.random() - 0.5) * 8, (Math.random() - 0.5) * 8, -5]}>
+            <boxGeometry args={[0.2, 0.2, 0.2]} />
+            <meshStandardMaterial color="#A12A1E" wireframe opacity={0.2} transparent />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+// --- 4. TILT EFFECT ---
+const TiltCard = ({ children }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x, { stiffness: 150, damping: 20 }); // Smooth movement
+  const mouseYSpring = useSpring(y, { stiffness: 150, damping: 20 });
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["7deg", "-7deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-7deg", "7deg"]);
+
+  return (
+    <motion.div 
+      onMouseMove={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        x.set(e.clientX / rect.width - 0.5);
+        y.set(e.clientY / rect.height - 0.5);
+      }} 
+      onMouseLeave={() => { x.set(0); y.set(0); }}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className="w-full h-full"
+    >
+      {children}
+    </motion.div>
+  );
+};
+
+// --- 5. GEOGRAPHY COMPONENTS ---
+function TopoTerrain() {
+  const meshRef = useRef();
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    meshRef.current.rotation.z = t * 0.05;
+    meshRef.current.position.y = Math.sin(t * 0.5) * 0.1 - 1.5;
+  });
+  return (
+    <mesh ref={meshRef} rotation={[-Math.PI / 2.5, 0, 0]} position={[0, -1.5, -5]}>
+      <planeGeometry args={[15, 15, 30, 30]} />
+      <meshStandardMaterial color="#112F20" wireframe transparent opacity={0.08} />
+    </mesh>
+  );
+}
+
+function GeographyNodes() {
+    return (
+        <group>
+            {[...Array(8)].map((_, i) => (
+                <Float key={i} speed={2}>
+                    <mesh position={[(Math.random() - 0.5) * 12, (Math.random() - 0.5) * 8, -8]}>
+                        <octahedronGeometry args={[0.1, 0]} />
+                        <meshStandardMaterial color="#A12A1E" opacity={0.2} transparent />
+                    </mesh>
+                </Float>
+            ))}
+        </group>
+    )
+}
+
+// --- 6. ECONOMY COMPONENTS ---
+function ProsperityNodes() {
+  const groupRef = useRef();
+  useFrame((state) => {
+    groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.1;
+  });
+  return (
+    <group ref={groupRef}>
+      {[...Array(10)].map((_, i) => (
+        <Float key={i} speed={2}>
+          <mesh position={[(Math.random() - 0.5) * 10, (Math.random() - 0.5) * 8, -5]}>
+            <boxGeometry args={[0.3, 0.3, 0.3]} />
+            <meshStandardMaterial color="#F4EBD0" metalness={0.8} roughness={0.2} emissive="#F4EBD0" emissiveIntensity={0.2} />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+// --- 7. GALLERY & VIDEO COMPONENTS ---
+function GalleryAmbience() {
+  const groupRef = useRef();
+  useFrame((state) => { groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.05; });
+  return (
+    <group ref={groupRef}>
+      {[...Array(15)].map((_, i) => (
+        <Float key={i} speed={2}>
+          <mesh position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 12, -10]}>
+            <sphereGeometry args={[0.05, 12, 12]} />
+            <meshStandardMaterial color="#112F20" opacity={0.2} transparent />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+function CyberStream() {
+  const groupRef = useRef();
+  useFrame((state) => {
+    const t = state.clock.getElapsedTime();
+    groupRef.current.rotation.x = t * 0.05;
+    groupRef.current.rotation.y = t * 0.05;
+  });
+  return (
+    <group ref={groupRef}>
+      {[...Array(15)].map((_, i) => (
+        <Float key={i} speed={3}>
+          <mesh position={[(Math.random() - 0.5) * 15, (Math.random() - 0.5) * 10, -5]}>
+            <cylinderGeometry args={[0.005, 0.005, 5, 6]} />
+            <meshStandardMaterial color="#A12A1E" emissive="#A12A1E" emissiveIntensity={1} transparent opacity={0.3} />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+function NewsDataStream() {
+  const groupRef = useRef();
+  useFrame((state) => { groupRef.current.rotation.y = state.clock.getElapsedTime() * 0.08; });
+  return (
+    <group ref={groupRef}>
+      {[...Array(12)].map((_, i) => (
+        <Float key={i} speed={2}>
+          <mesh position={[(Math.random() - 0.5) * 12, (Math.random() - 0.5) * 10, -6]}>
+            <sphereGeometry args={[0.04, 6, 6]} />
+            <meshStandardMaterial color="#112F20" opacity={0.15} transparent />
+          </mesh>
+        </Float>
+      ))}
+    </group>
+  );
+}
+
+// --- DIVIDER ---
+const ScallopedDivider = ({ color, top = false }) => (
+  <div 
+    className={`w-full h-10 relative z-20 ${top ? '-mb-10' : '-mt-10'}`} 
+    style={{ 
+      backgroundColor: color,
+      // maskImage: `radial-gradient(circle at 15px ${top ? '40px' : '0px'}, transparent 15px, black 16px)`,
+      maskSize: "30px 40px",
+      WebkitMaskImage: `radial-gradient(circle at 15px ${top ? '40px' : '0px'}, transparent 15px, black 16px)`,
+      WebkitMaskSize: "30px 40px",
+    }} 
+  />
+);
+
+const NewsCard = ({ item, panchayat }: { item: any; panchayat: any }) => (
+  <div className="group bg-white rounded-2xl overflow-hidden shadow-[0_10px_40px_rgba(0,0,0,0.04)] flex flex-col h-full border border-slate-100 transition-all duration-500 hover:shadow-2xl">
+    <div className="relative overflow-hidden aspect-video">
+      <img src={item.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt="News" />
+      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-lg shadow-sm">
+         <p className="text-[9px] font-black text-[#112F20] uppercase">
+           {new Date(item.date).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' })}
+         </p>
+      </div>
+    </div>
+
+    <div className="p-6 flex-1 flex flex-col">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="h-[1px] w-6 bg-red-700"></span>
+        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">Panchayat Hub</span>
+      </div>
+
+      <h4 className="text-xl font-bold text-[#112F20] leading-tight mb-4 line-clamp-2 group-hover:text-red-700 transition-colors Oswald uppercase">
+        {item.title}
+      </h4>
+
+        {/* ✅ Asli News Content (Excerpt) */}
+      <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-8 italic">
+        {item.data}
+      </p>
+
+
+      <div className="mt-auto pt-6 border-t border-slate-50 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+           <div className="w-8 h-8 rounded-full bg-slate-100 overflow-hidden border-2 border-slate-50 shadow-sm">
+            {panchayat?.config?.avatar ? (
+  <img src={panchayat.config.avatar} className="w-full h-full object-cover" alt="Admin" />
+) : (
+  <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400"><Users size={14}/></div>
+)}
+           </div>
+           <span className="text-[9px] font-black uppercase text-slate-900 tracking-tighter">Admin</span>
+        </div>
+        
+        <a 
+          href={item.link} 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="bg-[#112F20] text-white p-3 rounded-xl hover:bg-red-700 transition-all group/btn flex items-center justify-center"
+        >
+          <ArrowRight size={14} className="group-hover/btn:translate-x-1 transition-transform" />
+        </a>
+      </div>
+    </div>
+  </div>
+);
+
+const SectionScallop = () => (
+  <div className="w-full h-10 overflow-hidden leading-none rotate-180">
+    <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-20 fill-[#A12A1E]">
+      <path d="M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z" opacity=".25"></path>
+      <path d="M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z" opacity=".5"></path>
+      <path d="M0,0V5.63c149.93,59,314.09,71.32,475.83,42.57,43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4,58.93,25.75,117,43.77,182.2,38.53,86.53-7,172.46-45.71,248.8-84.81V0Z"></path>
+    </svg>
+  </div>
+);
+
+// Yeh image ke zigzag border ke liye hai
+const ImageZigZag = () => (
+  <div 
+    className="absolute top-0 -left-4 h-full w-6 z-10" 
+    style={{
+      backgroundColor: "#FBCFE8", // Light Pink from image
+      clipPath: "polygon(100% 0%, 100% 100%, 0% 95%, 100% 90%, 0% 85%, 100% 80%, 0% 75%, 100% 70%, 0% 65%, 100% 60%, 0% 55%, 100% 50%, 0% 45%, 100% 40%, 0% 35%, 100% 30%, 0% 25%, 100% 20%, 0% 15%, 100% 10%, 0% 5%)"
+    }}
+  />
+);
+
+export default function LeaderWebsiteClient({ panchayat, news }) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
-  const [formData, setFormData] = useState({ name: "", phone: "", message: "" });
-  const [loading, setLoading] = useState(false);
-
-  // --- 1. Dynamic Data Mapping ---
-  const themeColor = panchayat?.config?.themeColor || "#0055a4"; 
-  const avatar = panchayat?.config?.avatar || "https://via.placeholder.com/150";
-  const avatarPos = panchayat?.config?.avatarPos ?? 50;
-  const avatarZoom = panchayat?.config?.avatarZoom ?? 1;
-  const name = panchayat?.name || "Gram Panchayat";
-  const leaderName = panchayat?.leader_name || "Sarpanch Pratinidhi";
-  const bio = panchayat?.bio || "Gaon ki unnati hamari prathamikta hai. Swasthya, shiksha aur swarozgar ke saath hum ek behtar kal bana rahe hain.";
-  const slug = panchayat?.slug;
-  const gallery = panchayat?.config?.gallery || [];
-  const videos = panchayat?.config?.videos || [];
-  const globalAlert = panchayat?.global_alert || "";
+  const [lightboxImg, setLightboxImg] = useState(null);
 
   useEffect(() => {
     setIsMounted(true);
@@ -38,311 +321,657 @@ export default function LeaderWebsiteClient({ panchayat, news }: any) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = isMenuOpen ? "hidden" : "unset";
-  }, [isMenuOpen]);
+  if (!isMounted) return null;
 
-  // --- 2. Logic Helpers ---
-  const getYT = (url: string) => {
+    // 🔴 SUSPEND LOGIC START (Ise yahan paste karo)
+  if (panchayat?.status === "suspended") {
+    return (
+        <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 text-center relative z-[9999]">
+            <div className="max-w-md w-full bg-slate-900 border-2 border-red-500/30 p-12 rounded-[3rem] shadow-2xl shadow-red-900/20">
+                <XCircle size={60} className="text-red-500 mx-auto mb-8" />
+                <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-4 italic Teko">Website Suspended</h1>
+                <p className="text-slate-400 font-bold text-sm uppercase tracking-widest leading-relaxed mb-10 Oswald">
+                   Suraaksha aur prashasanik kaarano se is Gram Panchayat ki digital sevaayein temporary rok di gayi hain. 
+                   <br/> <span className="text-red-400 mt-2 block font-black underline italic">Sampark: Admin Office</span>
+                </p>
+                <div className="pt-8 border-t border-white/5 text-[10px] font-black uppercase text-slate-600 tracking-[5px] Oswald">
+                    RAJGRAM SECURITY HUB
+                </div>
+            </div>
+        </div>
+    );
+  }
+  // 🔴 SUSPEND LOGIC END
+
+  const name = panchayat?.name || "The Bharat Project";
+  const colors = { red: "#A12A1E", green: "#112F20", yellow: "#F4EBD0", white: "#FAF9F6" };
+  const globalAlert = panchayat?.global_alert || "";
+
+  const getYT = (url) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
     const match = url?.match(regExp);
     return (match && match[2].length === 11) ? match[2] : null;
   };
 
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "";
-    const date = new Date(dateString);
-    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
-  };
-
-  const handleSupportSubmit = async (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-        const res = await fetch("/api/site/support", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ ...formData, slug }),
-        });
-        if (res.ok) {
-            alert("Sandesh bhej diya gaya hai. Dhanyawad!");
-            setIsModalOpen(false);
-            setFormData({ name: "", phone: "", message: "" });
-        }
-    } catch (err) { alert("Error."); }
-    setLoading(false);
-  };
-
-  const infoSections = [
-    { id: "history", title: "History", icon: <Landmark size={20}/>, text: panchayat.history, img: panchayat.config?.historyImg, sub: "Virasat" },
-    { id: "geography", title: "Geography", icon: <Map size={20}/>, text: panchayat.geography, img: panchayat.config?.geographyImg, sub: "Bhugol" },
-    { id: "economy", title: "Economy", icon: <TrendingUp size={20}/>, text: panchayat.economy, img: panchayat.config?.economyImg, sub: "Vikas" }
-  ];
-
-  // ✅ 1. SUSPENDED STATE CHECK (SABSE PEHLE)
-// Is file mein return se theek pehle (line ~70) ye logic dalo:
-if (panchayat?.status === "suspended") {
   return (
-      <div className="min-h-screen bg-[#020617] flex items-center justify-center p-6 text-center">
-          <div className="max-w-md w-full bg-slate-900 border-2 border-red-500/30 p-12 rounded-[3rem] shadow-2xl shadow-red-900/20">
-              <XCircle size={60} className="text-red-500 mx-auto mb-8" />
-              <h1 className="text-3xl font-black text-white uppercase tracking-tighter mb-4 italic">Website Suspended</h1>
-              <p className="text-slate-400 font-bold text-sm uppercase tracking-widest leading-relaxed mb-10">
-                 Suraaksha aur prashasanik kaarano se is Gram Panchayat ki digital sevaayein temporary rok di gayi hain.
-                 <br/> <span className="text-red-400 mt-2 block font-black underline italic">Sampark: Admin Office</span>
-              </p>
-              <div className="pt-8 border-t border-white/5 text-[10px] font-black uppercase text-slate-600 tracking-[5px]">RAJGRAM SECURITY HUB</div>
-          </div>
-      </div>
-  );
-}
-
-  if (!isMounted) return null;
-
-  return (
-    <main className="bg-white font-sans text-slate-900 antialiased scroll-smooth overflow-x-hidden">
+    <main className="bg-[#FAF9F6] font-sans antialiased overflow-x-hidden relative text-left">
       
-      {/* 🟢 GLOBAL ALERT TICKER */}
-      {globalAlert && (
-          <div className="bg-red-600 text-white py-2 overflow-hidden sticky top-0 z-[1000] shadow-lg">
-              <div className="flex whitespace-nowrap animate-marquee font-black uppercase text-[10px] tracking-[4px]">
-                  {[1,2,3,4,5,6,7,8].map(i => <span key={i} className="mx-10 flex items-center gap-2"><ShieldAlert size={14}/> {globalAlert}</span>)}
-              </div>
-          </div>
-      )}
-
-      {/* 2. NAVBAR (SPACING FIX) */}
-      <nav className={`fixed ${!scrolled && globalAlert ? 'top-8' : 'top-0'} w-full z-[100] transition-all duration-300 ${scrolled ? 'bg-white shadow-lg py-2' : 'bg-white py-4 border-b'}`}>
-        <div className="max-w-7xl mx-auto px-4 flex justify-between items-center gap-4">
-            <div className="flex items-center gap-3 shrink-0">
-                <button onClick={() => setIsMenuOpen(true)} className="lg:hidden p-1 text-slate-900 shrink-0"><Menu size={26} /></button>
-                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 overflow-hidden bg-slate-100 shrink-0" style={{ borderColor: themeColor }}>
-                    <img 
-                        src={avatar} 
-                        style={{ objectFit: "cover", objectPosition: `center ${avatarPos}%`, transform: `scale(${avatarZoom})`, transformOrigin: 'center', width: '100%', height: '100%' }} 
-                        alt="L" 
-                    />
-                </div>
-                <div className="flex flex-col">
-                    <h1 className="text-[10px] sm:text-base font-black text-slate-900 leading-none uppercase tracking-tighter truncate max-w-[100px] sm:max-w-full">{name}</h1>
-                    <p className="text-[7px] sm:text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-1 leading-none">{leaderName}</p>
-                </div>
-            </div>
-            <div className="hidden lg:flex items-center gap-8 text-[11px] font-black uppercase tracking-widest text-slate-500">
-                {['vision', 'history', 'geography', 'economy', 'news'].map(id => <a key={id} href={`#${id}`} className="hover:text-blue-600 transition-all">{id}</a>)}
-            </div>
-            <button onClick={() => setIsModalOpen(true)} style={{ backgroundColor: themeColor }} className="px-4 py-2 sm:px-6 sm:py-2.5 text-white text-[9px] sm:text-[10px] font-black uppercase rounded-full shadow-lg shrink-0 hover:scale-105 transition-all">Support</button>
-        </div>
-      </nav>
-
-      {/* MOBILE MENU */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsMenuOpen(false)} className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[110] lg:hidden" />
-            <motion.div initial={{ x: "-100%" }} animate={{ x: 0 }} exit={{ x: "-100%" }} transition={{ type: "spring", damping: 25 }} className="fixed top-0 left-0 bottom-0 w-[280px] bg-white z-[120] shadow-2xl flex flex-col lg:hidden">
-              <div className="p-6 border-b flex justify-between items-center"><span className="font-black text-blue-600 text-xs uppercase">Navigation</span><button onClick={()=>setIsMenuOpen(false)}><X size={24}/></button></div>
-              <div className="flex-1 py-8 px-8 flex flex-col gap-2 overflow-y-auto">
-                 {['vision', 'history', 'geography', 'economy', 'news'].map(id => (<a key={id} href={`#${id}`} onClick={() => setIsMenuOpen(false)} className="text-xs font-black uppercase border-b border-slate-50 py-5 text-slate-700 hover:text-blue-600">{id}</a>))}
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
-
-      {/* 3. HERO SECTION */}
-      <section id="vision" className="relative pt-32 pb-16 px-4 bg-slate-50 overflow-hidden sm:pt-40 sm:pb-24">
-        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
-          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center lg:text-left">
-            <div style={{ color: themeColor }} className="inline-flex items-center gap-2 font-black text-[10px] uppercase tracking-[4px] mb-6"><Star size={16} fill={themeColor}/> MISSION 2026</div>
-            <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-slate-900 leading-[1.1] mb-8 uppercase tracking-tighter">Sashakt Gram, <br/> <span style={{ color: themeColor }}>Naya Sankalp.</span></h1>
-            <p className="text-lg text-slate-600 leading-relaxed mb-10 border-l-4 pl-6 italic max-w-xl mx-auto lg:mx-0 break-words" style={{ borderColor: themeColor }}>
-                Aapka Swagat Hai! {name} ke sarvangeen vikas ke liye hum vachanbaddh hain. Hamari panchayat ab digital kranti ke saath pragati ke naye kshitij ko chu rahi hai.
-            </p>
-            <div className="flex flex-wrap justify-center lg:justify-start gap-4">
-               <button onClick={() => setIsModalOpen(true)} style={{ backgroundColor: themeColor }} className="px-10 py-4 text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-xl hover:scale-105 transition-all">Connect Now</button>
-               <a href="#news" className="px-10 py-4 border-2 border-slate-200 font-black text-[10px] uppercase tracking-widest rounded-xl text-slate-700">Latest Feed</a>
-            </div>
-          </motion.div>
-          {panchayat.config?.banner && (
-            <img src={panchayat.config.banner} className="w-full h-[280px] sm:h-[450px] lg:h-[550px] object-cover rounded-[3rem] shadow-2xl" alt="Banner" />
-          )}
-        </div>
-      </section>
-
-      {/* 4. MANIFESTO */}
-      <section className="py-20 px-4 bg-slate-900 text-white rounded-[3rem] sm:rounded-[4rem] mx-2 sm:mx-4">
-          <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-center text-center lg:text-left">
-              {panchayat.config?.manifestoImg && (
-                <img src={panchayat.config.manifestoImg} className="w-full h-[300px] sm:h-[500px] object-cover rounded-[3rem] shadow-2xl shadow-black/50" alt="Vision" />
-              )}
-              <div>
-                  <h2 className="text-[10px] font-black uppercase tracking-[10px] text-blue-400 mb-6">Mera Manifesto</h2>
-                  <h3 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter mb-10 leading-tight italic text-slate-100">Blueprint For Vikas</h3>
-                  <div className="relative p-10 bg-white/5 border-l-8 rounded-r-3xl shadow-xl" style={{ borderColor: themeColor }}>
-                      <Quote className="opacity-20 mb-6 mx-auto lg:mx-0" size={40} style={{ color: themeColor }} />
-                      <p className="text-xl sm:text-2xl font-medium text-slate-200 leading-relaxed italic break-words" style={{ whiteSpace: 'pre-wrap' }}>"{bio}"</p>
-                  </div>
-              </div>
-          </div>
-      </section>
-
-      {/* 5. INFORMATION SECTIONS */}
-      <div className="space-y-4">
-        {infoSections.map((sec, i) => (
-            <section key={sec.id} id={sec.id} className={`py-16 sm:py-24 px-4 scroll-mt-24 ${i % 2 !== 0 ? 'bg-slate-50' : 'bg-white'}`}>
-            <div className={`max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start ${i % 2 !== 0 ? 'lg:flex-row-reverse' : ''}`}>
-                <div className="text-center lg:text-left">
-                    <div className="flex items-center justify-center lg:justify-start gap-4 mb-8">
-                        <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg shrink-0" style={{ backgroundColor: themeColor }}>{sec.icon}</div>
-                        <h2 className="text-[10px] font-black uppercase tracking-[5px] text-slate-400">{sec.title}</h2>
-                    </div>
-                    <h3 className="text-4xl sm:text-5xl font-black text-slate-900 mb-8 uppercase tracking-tighter italic leading-none">{sec.sub}</h3>
-                    <p className="text-lg text-slate-600 leading-relaxed border-l-4 pl-8 mx-auto lg:mx-0 break-words font-medium" style={{ borderColor: themeColor, whiteSpace: 'pre-wrap' }}>{sec.text || "Jankari jald hi update ki jayegi."}</p>
-                </div>
-                {sec.img && (
-                    <img src={sec.img} className="w-full h-[300px] sm:h-[450px] object-cover rounded-[3rem] shadow-xl" alt={sec.id} />
-                )}
-            </div>
-            </section>
+       {/* 🔴 RUNNING GLOBAL ALERT */}
+{globalAlert && (
+  <div className="bg-[#A12A1E] text-white py-2 overflow-hidden sticky top-0 z-[1001] shadow-lg border-b border-white/10">
+    <div className="flex whitespace-nowrap">
+      <div className="animate-marquee flex">
+        {/* Content ko 2 baar repeat kiya hai taaki loop seamless lage */}
+        {[...Array(10)].map((_, i) => (
+          <span key={i} className="mx-10 flex items-center gap-2 font-black uppercase text-[11px] tracking-[4px] Oswald">
+            <ShieldAlert size={14} className="text-white fill-white/20"/> {globalAlert}
+          </span>
+        ))}
+        {[...Array(10)].map((_, i) => (
+          <span key={`dup-${i}`} className="mx-10 flex items-center gap-2 font-black uppercase text-[11px] tracking-[4px] Oswald">
+            <ShieldAlert size={14} className="text-white fill-white/20"/> {globalAlert}
+          </span>
         ))}
       </div>
+    </div>
+  </div>
+)}
 
-      {/* 6. VIDEO HUB (EVEN GRID) */}
-      {videos.length > 0 && (
-        <section id="videos" className="py-24 px-4 bg-slate-950 text-white rounded-[5rem] mx-4 mb-20 scroll-mt-20">
-          <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl sm:text-5xl font-black uppercase mb-16 text-center italic tracking-tighter text-white/90">Live Video Feed</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                {videos.map((url: string, i: number) => {
-                    const vidId = getYT(url);
-                    if (!vidId) return null;
-                    return (
-                        <div key={i} className="relative aspect-video rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl">
-                            <iframe className="w-full h-full" src={`https://www.youtube.com/embed/${vidId}`} allowFullScreen></iframe>
-                        </div>
-                    );
-                })}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* 7. GALLERY (EVEN GRID) */}
-      <section id="gallery" className="py-24 px-4 bg-slate-50 scroll-mt-24 border-t text-center">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl sm:text-5xl font-black text-slate-900 uppercase mb-16 tracking-tighter italic">Vikas Gallery</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {gallery.map((img: string, i: number) => (
-              img ? (
-                <motion.div whileHover={{y:-10}} key={i} className="relative aspect-video rounded-[2rem] overflow-hidden shadow-xl bg-slate-200">
-                  <img src={img} className="w-full h-full object-cover" alt="Work" />
-                </motion.div>
-              ) : null
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. NEWS SECTION (MODERN & COMPACT) */}
-<section id="news" className="py-20 px-4 bg-slate-50/30 scroll-mt-10">
-  <div className="max-w-7xl mx-auto">
+     {/* 🟢 NAVBAR - Optimized for Mobile (Connect hidden on mobile nav) */}
+<nav className={`fixed ${scrolled ? 'top-4' : globalAlert ? 'top-10' : 'top-20'} left-1/2 -translate-x-1/2 w-[95%] max-w-7xl z-[1000] transition-all duration-500`}>
+  <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-2xl px-4 md:px-6 py-3 flex justify-between items-center border border-black/5">
     
-    {/* Section Header - Clean Minimalist */}
-    <div className="flex items-end justify-between mb-10 border-b-2 border-slate-100 pb-6">
-      <div className="text-left">
-        <p className="text-[10px] font-black uppercase tracking-[5px] mb-2" style={{ color: themeColor }}>Stay Updated</p>
-        <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tighter">Latest News</h2>
-      </div>
-      <div className="hidden md:block">
-        <div className="h-1.5 w-16 rounded-full" style={{ backgroundColor: themeColor }}></div>
+    {/* 🍔 MOBILE HAMBURGER (Left) */}
+    <div className="lg:hidden flex items-center">
+      <button 
+        onClick={() => setIsMenuOpen(true)} 
+        className="p-2 text-[#112F20] hover:bg-slate-100 rounded-lg transition-all"
+      >
+        <Menu size={24} />
+      </button>
+    </div>
+
+    {/* 🏛️ LOGO AREA */}
+    <div className="flex items-center gap-3 flex-1 lg:flex-none justify-center lg:justify-start">
+     {panchayat?.config?.avatar && (
+  <img src={panchayat.config.avatar} className="h-8 w-8 md:h-10 md:w-10 object-cover rounded-full border-2 border-red-700/20" alt="Avatar" />
+)}
+      <div className="leading-none text-left">
+        <h1 className="text-xs md:text-sm font-black uppercase tracking-tighter Oswald">{name}</h1>
+        <span className="text-[7px] md:text-[8px] font-bold text-slate-400 tracking-[2px] uppercase">Official Portal</span>
       </div>
     </div>
 
-    {/* News Grid - Modern Spacing */}
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {news?.map((item: any) => (
-        <div 
-          key={item.id} 
-          className="group relative bg-white rounded-[2rem] border border-slate-200/50 hover:border-transparent shadow-sm hover:shadow-2xl hover:shadow-slate-200/50 transition-all duration-500 overflow-hidden flex flex-col h-full"
-        >
-          {/* Image - Aspect Ratio 16:9 */}
-          <div className="relative aspect-video overflow-hidden">
-            <img 
-              src={item.image} 
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out" 
-              alt="News" 
-            />
-            {/* Soft Overlay */}
-            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-500"></div>
-          </div>
-
-          {/* Content Area - Compact Padding */}
-          <div className="p-6 flex flex-col flex-1">
-            <div className="flex items-center gap-2 mb-3">
-              <span 
-                className="w-1 h-4 rounded-full" 
-                style={{ backgroundColor: themeColor }}
-              ></span>
-              <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                {formatDate(item.date)}
-              </p>
-            </div>
-            
-            <h4 
-              className="font-bold text-lg text-slate-800 leading-snug line-clamp-2 mb-6 group-hover:text-blue-600 transition-colors"
-              dangerouslySetInnerHTML={{ __html: item.title }}
-            ></h4>
-
-            {/* Subtle Action Link */}
-            <div className="mt-auto pt-4 border-t border-slate-50 flex justify-between items-center">
-              <a 
-                href={item.link} 
-                target="_blank" 
-                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all group/link"
-                style={{ color: themeColor }}
-              >
-                Read Full Story 
-                <span className="group-hover/link:translate-x-1 transition-transform">→</span>
-              </a>
-              
-              {/* Decorative share/link icon */}
-              <div className="p-2 bg-slate-50 rounded-lg group-hover:bg-blue-50 transition-colors">
-                <Globe size={12} className="text-slate-300 group-hover:text-blue-400" />
-              </div>
-            </div>
-          </div>
-        </div>
+    {/* 🖥️ DESKTOP NAV LINKS (Hidden on Mobile) */}
+    <div className="hidden lg:flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-[#112F20]">
+      {['Home', 'History', 'Development', 'Geography', 'Economy', 'Gallery', 'News'].map(id => (
+        <a key={id} href={`#${id.toLowerCase()}`} className="hover:text-red-700 transition-colors relative group">
+          {id}
+          <span className="absolute -bottom-1 left-0 w-0 h-[2px] bg-red-700 transition-all group-hover:w-full"></span>
+        </a>
       ))}
     </div>
+
+    {/* 🔘 CONNECT BUTTON - 🔥 Yahan fix kiya hai: hidden lg:block (Mobile par gayab) */}
+    <button 
+      onClick={() => setIsModalOpen(true)} 
+      className="hidden lg:flex bg-[#112F20] text-white px-6 py-2.5 rounded-full text-[10px] font-black uppercase shadow-lg hover:bg-red-700 transition-all hover:scale-105"
+    >
+      Connect
+    </button>
+    
+    {/* Mobile placeholder for alignment when button is hidden */}
+    <div className="w-10 lg:hidden"></div>
+  </div>
+
+  {/* 📱 MOBILE OVERLAY MENU (Fixed Fit & No Blur) */}
+  <AnimatePresence>
+    {isMenuOpen && (
+      <>
+        {/* Backdrop (No blur) */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          onClick={() => setIsMenuOpen(false)}
+          className="fixed inset-0 bg-black/60 z-[2000] lg:hidden"
+        />
+        
+        {/* Sidebar (Top-Left Fitted) */}
+        <motion.div 
+          initial={{ x: "-100%" }}
+          animate={{ x: 0 }}
+          exit={{ x: "-100%" }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
+          className="fixed top-0 left-0 h-screen w-[80%] max-w-[300px] bg-white shadow-2xl z-[2001] lg:hidden flex flex-col p-6 text-left"
+        >
+          {/* 🔝 Connect Button ONLY here on Mobile */}
+          <div className="flex items-center justify-between mb-10 gap-3">
+            <button 
+              onClick={() => { setIsMenuOpen(false); setIsModalOpen(true); }}
+              className="flex-1 bg-[#112F20] text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-[2px] shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
+            >
+              Connect <ArrowRight size={14} />
+            </button>
+            
+            <button 
+              onClick={() => setIsMenuOpen(false)} 
+              className="p-2.5 bg-slate-100 text-[#112F20] rounded-xl hover:bg-red-700 hover:text-white transition-all"
+            >
+              <X size={20} />
+            </button>
+          </div>
+
+          {/* Links */}
+          <div className="flex flex-col gap-1 overflow-y-auto">
+            {['Home', 'History', 'Development', 'Geography', 'Economy', 'Gallery', 'News'].map((id, idx) => (
+              <motion.a
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.05 * idx }}
+                key={id}
+                href={`#${id.toLowerCase()}`}
+                onClick={() => setIsMenuOpen(false)}
+                className="py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-widest text-[#112F20] hover:bg-slate-50 transition-all flex items-center justify-between group Oswald"
+              >
+                {id}
+                <ChevronRight size={14} className="text-slate-200 group-hover:text-red-700" />
+              </motion.a>
+            ))}
+          </div>
+
+          <div className="mt-auto pt-6 border-t border-slate-100 flex items-center gap-3">
+             <Landmark size={16} className="text-red-700" />
+             <p className="text-[9px] font-black uppercase text-[#112F20] Oswald">{name}</p>
+          </div>
+        </motion.div>
+      </>
+    )}
+  </AnimatePresence>
+</nav>
+
+      <section id="home" className="relative h-[100svh] w-full flex items-center justify-center overflow-hidden">
+  
+  {/* 1. BACKGROUND SWITCHER */}
+  <div 
+    className="absolute inset-0 hidden md:block bg-cover bg-center"
+    style={{ backgroundImage: "url('/images/sitebg.jpeg')" }}
+  />
+  <div 
+    className="absolute inset-0 block md:hidden bg-cover bg-center"
+    style={{ backgroundImage: "url('/images/mobilebg.jpeg')" }}
+  />
+
+  {/* Content Area - Mobile par mt-0 karke content ko bilkul upar shift kiya hai */}
+  <div className="z-10 text-center px-4 max-w-4xl mt-0 md:mt-[8%]">
+    
+    {/* Village Name Section - Mobile margins reduced */}
+    <div className="mb-0 md:mb-4">
+       <p className="text-[8px] md:text-sm font-black text-[#112F20] tracking-[3px] md:tracking-[8px] uppercase opacity-70">The</p>
+       <h1 
+         className="text-5xl md:text-[130px] leading-[0.8] text-[#A12A1E] drop-shadow-sm uppercase tracking-tighter"
+         style={{ fontFamily: "'Teko', sans-serif" }}
+       >
+         {panchayat?.name || "UCCAIN"}
+       </h1>
+    </div>
+
+    {/* Tagline - Very compact on mobile */}
+    <div className="flex items-center justify-center gap-2 md:gap-4 my-1 md:my-5">
+      <div className="h-[1px] w-4 md:w-10 bg-[#A12A1E]/30"></div>
+      <p 
+        className="text-[11px] md:text-3xl font-bold text-[#112F20]"
+        style={{ fontFamily: "'Hind', sans-serif" }}
+      >
+        <span className="text-orange-600">●</span> होकर निडर... शुरूकर <span className="text-orange-600">●</span>
+      </p>
+      <div className="h-[1px] w-4 md:w-10 bg-[#A12A1E]/30"></div>
+    </div>
+
+    {/* Manifesto Text - (VVIP FIX FOR MOBILE OVERLAP) */}
+    <div className="max-w-[90%] md:max-w-2xl mx-auto mb-4 md:mb-10">
+      {/* 
+          - text-[9px] is the magic size for long text on mobile.
+          - Leading-tight to reduce vertical space.
+      */}
+      <p className="text-[9px] md:text-lg text-slate-700 font-medium italic leading-[1.3] md:leading-normal opacity-90">
+        "{panchayat?.bio || "A manifesto is more than a mere document; it is a declaration of intent..."}"
+      </p>
+    </div>
+
+    {/* Action Button - Compact padding for mobile */}
+    <div className="flex flex-col items-center">
+      <button 
+        onClick={() => setIsModalOpen(true)}
+        className="px-6 py-2.5 md:px-12 md:py-4 bg-[#064235] text-white rounded-full font-bold text-[9px] md:text-xs uppercase tracking-[2px] hover:bg-[#A12A1E] shadow-xl transition-all active:scale-95"
+      >
+        Join The Movement
+      </button>
+    </div>
+
   </div>
 </section>
 
-      {/* 9. SUPPORT MODAL */}
+      {/* 🟢 HISTORY SECTION - With Quatrefoil Image Frame */ }
+<section id="history" className="relative py-20 lg:py-32 bg-[#FAF9F6] px-6 overflow-hidden border-t border-slate-200" 
+  style={{ backgroundImage: `url('https://www.transparenttextures.com/patterns/natural-paper.png')` }}>
+  
+  <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-start relative z-10 text-left">
+      
+      {/* LEFT SIDE: Heading + Text */}
+      <div className="space-y-10" data-aos="fade-right">
+        {/* Heading Section */}
+        <div className="space-y-4">
+          <h2 className="text-4xl md:text-[80px] font-black leading-[0.85] text-[#112F20] uppercase tracking-tighter Teko">
+            The History of  <br/>   
+            <span className="text-[#A12A1E]">{panchayat?.name || "UCCAIN"}</span>
+          </h2>
+          {/* Simple Separator Line */}
+          <div className="h-1 w-20 bg-red-700"></div>
+        </div>
+
+        {/* History Content */}
+        <div className="text-l md:text-xl text-slate-700 leading-relaxed Oswald" 
+             style={{ whiteSpace: 'pre-wrap' }}>
+          {panchayat.history || "Panchayat ka itihas yahan dikhega..."}
+        </div>
+      </div>
+
+      {/* RIGHT SIDE: Simple Square Photo */}
+      <div className="flex justify-center lg:justify-end lg:sticky lg:top-32" data-aos="zoom-in">
+        <div className="w-full max-w-[500px] aspect-square bg-white p-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-slate-200">
+         {panchayat?.config?.historyImg ? (
+  <img src={panchayat.config.historyImg} className="w-full h-full object-cover transition-transform duration-700 hover:scale-[1.02]" alt="History Square Photo" />
+) : (
+  <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-300 italic uppercase font-black text-xs">History Photo</div>
+)}
+        </div>
+      </div>
+
+  </div>
+</section>
+      {/* 🟢 GEOGRAPHY SECTION (Replica of Why Bharat Section) */}
+<div className="relative">
+  {/* TOP SCALLOPED BORDER */}
+  <div 
+    className="w-full h-12 bg-white" 
+    style={{ 
+      maskImage: "radial-gradient(circle at 15px -10px, transparent 20px, black 21px)",
+      WebkitMaskImage: "radial-gradient(circle at 15px -10px, transparent 20px, black 21px)",
+      maskSize: "30px ",
+      backgroundColor: "#A12A1E" 
+    }}
+  />
+
+  <section id="geography" className="bg-[#A12A1E] text-white py-16 lg:py-24 px-6 relative overflow-hidden">
+    <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+        
+        {/* LEFT: Text Content */}
+        <div className="space-y-8 text-left" data-aos="fade-right">
+          <h2 className="text-3xl md:text-7xl font-black uppercase tracking-tighter leading-[0.9] Teko">
+<span className="text-[#F4EBD0]">{panchayat?.name}</span>, <br/> Geography
+          </h2>
+          
+          <div className="space-y-6 text-l md:text-xl font-medium leading-relaxed opacity-90 Oswald">
+             <p>{panchayat.geography || "Since 2008, we have championed change. Bharat needs access, mentorship, and funding."}</p>
+            
+          </div>
+        </div>
+
+        {/* RIGHT: Image with Left ZigZag Frame */}
+        <div className="relative group" data-aos="fade-left">
+           <div className="relative bg-white p-0 shadow-2xl overflow-hidden">
+              {/* Pink ZigZag Border on Left Side */}
+              <ImageZigZag />
+              
+              {panchayat?.config?.economyImg ? (
+  <img src={panchayat.config.economyImg} className="w-full h-[60vh] object-cover" alt="Economy" />
+) : (
+  <div className="w-full h-[60vh] bg-slate-100 flex items-center justify-center text-slate-300 italic uppercase font-black text-xs">Economy Photo</div>
+)}
+           </div>
+           
+           {/* Decorative Shadow/Offset border */}
+           <div className="absolute -bottom-4 -right-4 w-full h-full border-2 border-white/20 -z-10 rounded-sm"></div>
+        </div>
+
+    </div>
+  </section>
+</div>
+
+      {/* 🟢 ECONOMY SECTION - Style Matched with History/Geography */}
+<ScallopedDivider color={colors.red} top={true} />
+<section id="economy" className="bg-[#A12A1E] text-white py-16 lg:py-24 px-6 relative overflow-hidden">
+  
+  {/* 🌌 THREE.JS BACKGROUND */}
+  <OptimizedCanvas>
+    <ambientLight intensity={0.8} />
+    <pointLight position={[10, 10, 10]} color="#F4EBD0" />
+    <ProsperityNodes />
+  </OptimizedCanvas>
+
+  <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center relative z-10 text-left">
+      
+      {/* 📜 TEXT CONTENT (Matched with History style) */}
+      <div className="space-y-8">
+          <h2 className="text-3xl lg:text-6xl font-black uppercase tracking-tighter">
+            LOCAL <span className="text-[#F4EBD0] italic">ECONOMY</span>
+          </h2>
+          
+          <p className="text-l lg:text-l text-white/90 border-l-8 border-[#F4EBD0] pl-4 py-3 bg-white/10 backdrop-blur-sm rounded-r-2xl leading-relaxed">
+            {panchayat.economy}
+          </p>
+      </div>
+
+      {/* 🖼️ IMAGE CONTENT */}
+      <div className="flex justify-center">
+          <TiltCard>
+            <div className="rounded-[4rem] overflow-hidden shadow-2xl border-8 border-white/10">
+               {panchayat?.config?.geographyImg ? (
+  <img src={panchayat.config.geographyImg} className="w-full h-[350px] md:h-[450px] object-cover contrast-125 brightness-90 transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105" alt="Geography View" />
+) : (
+  <div className="w-full h-[350px] md:h-[450px] bg-slate-100 flex items-center justify-center text-slate-300 italic uppercase font-black text-xs">Geography Photo</div>
+)}
+            </div>
+          </TiltCard>
+      </div>
+  </div>
+</section>
+<ScallopedDivider color={colors.red} />
+
+      {/* 🟢 GALLERY SECTION - Full Image Cover & Smooth Mobile Flow */}
+<section id="gallery" className="relative py-16 lg:py-28 bg-white px-0 md:px-6 overflow-hidden">
+  
+  {/* 🌌 THREE.JS BACKGROUND */}
+  <OptimizedCanvas>
+    {/* <ambientLight intensity={0.5} /> */}
+    <GalleryAmbience />
+  </OptimizedCanvas>
+
+  <div className="max-w-7xl mx-auto text-center relative z-10">
+    {/* 🏷️ Header */}
+    <div className="px-6 mb-12 lg:mb-20">
+      <h2 className="text-4xl lg:text-[60px] font-black uppercase text-[#112F20] leading-none Oswald">
+        THE <span className="text-red-700 italic">GALLERY</span>
+      </h2>
+      <div className="flex justify-center items-center gap-3 mt-4">
+        <span className="h-[2px] w-10 bg-red-700 opacity-30"></span>
+        <p className="text-[10px] font-black uppercase tracking-[5px] text-slate-400">Captured Moments</p>
+        <span className="h-[2px] w-10 bg-red-700 opacity-30"></span>
+      </div>
+    </div>
+
+    {/* --- 🖥️ DESKTOP VIEW: FULL COVER GRID --- */}
+    <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
+      {panchayat?.config?.gallery?.map((img: string, i: number) => (
+        <motion.div 
+          key={i} 
+          whileHover={{ y: -8 }}
+          onClick={() => setLightboxImg(img)} 
+          className="cursor-pointer group relative"
+        >
+          <TiltCard>
+            <div className="relative aspect-square overflow-hidden bg-slate-100 rounded-2xl shadow-lg border border-slate-100">
+              {/* Image filling 100% of the container */}
+              <img 
+                src={img} 
+                className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+                loading="lazy" 
+                alt="Gallery"
+              />
+              {/* High-end hover overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-[#112F20]/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-6">
+                 <p className="text-white text-[10px] font-black uppercase tracking-[3px]">View Full Story</p>
+              </div>
+            </div>
+          </TiltCard>
+        </motion.div>
+      ))}
+    </div>
+
+    {/* --- 📱 MOBILE VIEW: EDGE-TO-EDGE COVER CAROUSEL --- */}
+    <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-0 no-scrollbar">
+      {panchayat?.config?.gallery?.map((img: string, i: number) => (
+        <div
+          key={i}
+          onClick={() => setLightboxImg(img)}
+          className="snap-center min-w-full px-6"
+        >
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0.8 }}
+            whileInView={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.6 }}
+            className="relative aspect-[3/4] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-[4px] border-white"
+          >
+            {/* Image as a full cover background */}
+            <img 
+              src={img} 
+              className="absolute inset-0 w-full h-full object-cover" 
+              alt="Gallery Mobile" 
+            />
+            
+
+          </motion.div>
+        </div>
+      ))}
+    </div>
+
+    {/* Mobile Progress Line */}
+    <div className="md:hidden w-1/2 h-[2px] bg-slate-100 mx-auto mt-10 relative overflow-hidden">
+        <motion.div 
+           className="absolute top-0 left-0 h-full bg-red-700 w-full"
+           initial={{ x: "-100%" }}
+           whileInView={{ x: "0%" }}
+           transition={{ duration: 1 }}
+        />
+    </div>
+
+  </div>
+
+  
+</section>
+
+      {/* 🎥 VIDEOS SECTION — Soft Pastel Style */}
+{panchayat?.config?.videos?.length > 0 && (
+<section
+  id="videos"
+  className="py-24 px-6 bg-gradient-to-b from-[#FAF9F6] via-[#F4EBD0] to-[#EBC3D4]"
+>
+  <div className="max-w-6xl mx-auto">
+
+    {/* Heading */}
+    <div className="text-center mb-16">
+      <h2 className="text-4xl lg:text-6xl font-black Oswald text-[#112F20]">
+        Village <span className="text-red-700">Stories</span>
+      </h2>
+      <p className="mt-4 text-slate-600 max-w-xl mx-auto">
+        Real moments, real people — directly from our Panchayat.
+      </p>
+    </div>
+
+    {/* Desktop Grid */}
+    <div className="hidden md:grid grid-cols-2 gap-10">
+      {panchayat.config.videos.map((url, i) => {
+        const vidId = getYT(url)
+        return vidId ? (
+          <div
+            key={i}
+            className="rounded-3xl overflow-hidden bg-white shadow-xl border border-slate-200"
+          >
+            <iframe
+              className="w-full aspect-video"
+              src={`https://www.youtube.com/embed/${vidId}`}
+              loading="lazy"
+              allowFullScreen
+            />
+          </div>
+        ) : null
+      })}
+    </div>
+
+    {/* Mobile Carousel */}
+    <div className="md:hidden flex overflow-x-auto gap-6 snap-x snap-mandatory no-scrollbar">
+      {panchayat.config.videos.map((url, i) => {
+        const vidId = getYT(url)
+        return vidId ? (
+          <div key={i} className="snap-center min-w-[90%]">
+            <div className="rounded-2xl overflow-hidden bg-white shadow-xl border border-slate-200">
+              <iframe
+                className="w-full aspect-video"
+                src={`https://www.youtube.com/embed/${vidId}`}
+                loading="lazy"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        ) : null
+      })}
+    </div>
+
+  </div>
+</section>
+)}
+
+
+      {/* 🟢 NEWS SECTION */}
+{news && news.length > 0 && (
+  <section id="news" className="relative lg:py-32 py-16 bg-[#f8fafc] px-6 overflow-hidden border-t">
+    
+    {/* Grid Dots Background */}
+    <div className="absolute top-0 left-0 w-full h-full opacity-[0.05] pointer-events-none" 
+         style={{ backgroundImage: `radial-gradient(#112F20 1px, transparent 1px)`, backgroundSize: '30px 30px' }} />
+    
+    <OptimizedCanvas>
+      <ambientLight intensity={0.5} /><NewsDataStream />
+    </OptimizedCanvas>
+
+    <div className="max-w-7xl mx-auto relative z-10 text-left">
+      
+      {/* Header */}
+      <div className="flex flex-col md:flex-row justify-between items-end mb-12 lg:mb-20 border-l-4 border-red-700 pl-6">
+        <div>
+          <h2 className="text-4xl lg:text-7xl font-black text-[#112F20] uppercase tracking-tighter Oswald">
+            NEWS <span className="text-slate-400 font-light">Updates</span>
+          </h2>
+          <p className="text-[10px] md:text-xs font-black text-red-700 tracking-[5px] md:tracking-[10px] uppercase mt-2">
+            Latest from the ground
+          </p>
+        </div>
+        <div className="block md:hidden mt-4 text-[9px] font-black uppercase tracking-widest text-slate-400 animate-pulse">
+          Swipe to explore →
+        </div>
+      </div>
+
+      {/* 🖥️ DESKTOP VIEW: MASONRY GRID */}
+      <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12 items-start">
+        {news.map((item: any, i: number) => (
+          <div key={i} className={`${i % 2 === 1 ? 'lg:mt-16' : ''}`}>
+            <TiltCard>
+              <NewsCard item={item} panchayat={panchayat} />
+            </TiltCard>
+          </div>
+        ))}
+      </div>
+
+      {/* 📱 MOBILE VIEW: MODERN CAROUSEL */}
+      <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory gap-5 pb-8 no-scrollbar px-2">
+        {news.map((item: any, i: number) => (
+          <div key={i} className="snap-center min-w-[85vw] h-full">
+            <NewsCard item={item} panchayat={panchayat} />
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+  </section>
+)}
+
+      <Footer panchayat={panchayat} />
+
+      {/* MODAL & LIGHTBOX */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
-            <div onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="relative w-full max-w-lg bg-white rounded-[3rem] shadow-2xl p-10 overflow-hidden">
-                <div className="flex justify-between items-center mb-8 border-b pb-4 font-black uppercase italic tracking-tighter">Support Candidate <button onClick={()=>setIsModalOpen(false)}><X/></button></div>
-                <form onSubmit={handleSupportSubmit} className="space-y-6">
-                    <input required type="text" placeholder="Naam" value={formData.name} onChange={(e)=>setFormData({...formData, name: e.target.value})} className="w-full p-5 border-2 border-slate-100 rounded-2xl outline-none font-bold text-slate-900" />
-                    <input required type="tel" placeholder="Mobile" value={formData.phone} onChange={(e)=>setFormData({...formData, phone: e.target.value})} className="w-full p-5 border-2 border-slate-100 rounded-2xl outline-none font-bold text-slate-900" />
-                    <textarea required placeholder="Sandesh..." value={formData.message} onChange={(e)=>setFormData({...formData, message: e.target.value})} className="w-full p-5 border-2 border-slate-100 rounded-2xl h-32 font-bold resize-none text-slate-900" />
-                    <button disabled={loading} type="submit" style={{ backgroundColor: themeColor }} className="w-full py-6 text-white font-black uppercase rounded-2xl shadow-xl shadow-black/20">Submit Samarthan</button>
-                </form>
-            </motion.div>
+          <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4">
+            <div onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-[#112F20]/95 backdrop-blur-md" />
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative w-full max-w-xl bg-white rounded-[3rem] p-12 shadow-2xl"><button className="absolute top-8 right-8 text-slate-300" onClick={() => setIsModalOpen(false)}><X size={32}/></button><h2 className="text-4xl font-black mb-8 italic">Support Now</h2><form className="space-y-4"><input type="text" placeholder="Full Name" className="w-full p-5 rounded-2xl border-2 font-bold" /><input type="tel" placeholder="Mobile" className="w-full p-5 rounded-2xl border-2 font-bold" /><textarea placeholder="Message..." className="w-full p-5 rounded-2xl border-2 h-32 font-bold" /><button className="w-full py-6 bg-[#112F20] text-white font-black uppercase rounded-2xl shadow-xl">SUBMIT</button></form></motion.div>
           </div>
+        )}
+        {lightboxImg && (
+          <motion.div initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}} className="fixed inset-0 z-[3000] flex items-center justify-center bg-black/90 p-4" onClick={()=>setLightboxImg(null)}><img src={lightboxImg} className="max-h-full rounded-2xl shadow-2xl" /></motion.div>
         )}
       </AnimatePresence>
 
-      {/* 10. PREMIUM INFORMATIVE FOOTER */}
-      <Footer panchayat={panchayat} />
+      
+    {/* 🪄 NO-SCROLLBAR CSS (Ise section ke andar hi rakhein) */}
+    {/* Google Font Import (Sirf Hindi ke liye) */}
+  <style jsx global>{`
+  /* 1. FONT IMPORTS */
+  @import url('https://fonts.googleapis.com/css2?family=Teko:wght@600&family=Playfair+Display:ital,wght@0,700;1,700&family=Hind:wght@600&family=Oswald:wght@400;700&display=swap');
 
-      <style jsx global>{`
-        @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .animate-marquee { display: flex; animation: marquee 25s linear infinite; }
-      `}</style>
+  /* 2. FONT UTILITIES */
+  .Teko { font-family: 'Teko', sans-serif !important; }
+  .Hind { font-family: 'Hind', sans-serif !important; }
+  .Playfair { font-family: 'Playfair Display', serif !important; }
+  .Oswald { font-family: 'Oswald', sans-serif !important; }
+
+  /* 3. 🏃 RUNNING GLOBAL ALERT (MARQUEE) ANIMATION */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-30%); }
+  }
+
+  .animate-marquee {
+    display: flex;
+    width: max-content;
+    animation: marquee 25s linear infinite;
+  }
+
+  .marquee-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  /* Hover karne par alert ruk jayega (Optional) */
+  .animate-marquee:hover {
+    animation-play-state: paused;
+  }
+
+  /* 4. PREMIUM CUSTOM SCROLLBAR */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #A12A1E; /* Aapka Red Theme Color */
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #7a1f16;
+  }
+
+  /* 5. GLOBAL SMOOTHNESS */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Faltu space hatane ke liye (Mobile fix) */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+`}</style>
     </main>
   );
 }

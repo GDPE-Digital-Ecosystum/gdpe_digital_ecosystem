@@ -8,7 +8,8 @@ async function importTest() {
         await client.connect();
         const db = client.db("rajgram_db");
         // ✅ Nayi Collection mein data dalo
-        const testCollection = db.collection("panchayats_test");
+    
+        const testCollection = db.collection("usertests");
 
         const data = JSON.parse(fs.readFileSync('gram_panchayat1.json', 'utf8'));
         

@@ -1,144 +1,125 @@
 "use client";
 import Link from "next/link";
-import { 
-  Facebook, Twitter, Instagram, Youtube, Mail, Phone, 
-  MapPin, Clock, PhoneCall, ShieldCheck, ChevronRight, Heart, Landmark 
+import {
+  Facebook,
+  Instagram,
+  Twitter,
+  MapPin,
+  Mail,
+  PhoneCall,
+  ChevronRight
 } from "lucide-react";
 
-export default function Footer({ panchayat }: { panchayat: any }) {
-  // --- Dynamic Data from Props ---
-  const themeColor = panchayat?.config?.themeColor || "#0055a4"; 
-  const name = panchayat?.name || "Gram Panchayat";
-  const leaderName = panchayat?.leader_name || "Sarpanch Pratinidhi";
-  const slug = panchayat?.slug;
+export default function Footer({ panchayat }) {
 
-  const navLinks = [
-    { id: "vision", name: "Vision" },
-    { id: "history", name: "History" },
-    { id: "geography", name: "Geography" },
-    { id: "economy", name: "Economy" },
-    { id: "news", name: "News" }
-  ];
+const themeColor = panchayat?.config?.themeColor || "#A12A1E";
+const name = panchayat?.name || "Gram Panchayat";
+const slug = panchayat?.slug;
 
-  return (
-    <footer className="bg-[#0f172a] text-white pt-20 pb-10 px-6 relative overflow-hidden">
-      {/* Decorative Background Icon */}
-      <div className="absolute top-0 right-0 opacity-[0.03] -mr-20 -mt-20 pointer-events-none">
-        <Landmark size={400} />
-      </div>
+const navLinks = [
+  { id: "vision", name: "Vision" },
+  { id: "history", name: "History" },
+  { id: "geography", name: "Geography" },
+  { id: "economy", name: "Economy" },
+  { id: "news", name: "News" }
+];
 
-      <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16 relative z-10 text-left">
-         
-         {/* Column 1: Brand & Identity */}
-         <div className="space-y-6">
-            <div className="flex items-center gap-3">
-              <div 
-                className="w-12 h-12 text-white flex items-center justify-center font-black rounded-xl shadow-lg text-xl italic"
-                style={{ backgroundColor: themeColor }}
-              >
-                {name[0]}
-              </div>
-              <div>
-                <h3 className="text-xl font-black uppercase tracking-tighter leading-none">{name}</h3>
-                <p className="text-[9px] font-bold uppercase tracking-[2px] mt-1 opacity-60">Digital Panchayat Hub</p>
-              </div>
-            </div>
-            <p className="text-[11px] font-bold uppercase tracking-widest text-slate-400 leading-relaxed text-justify">
-              Digital Gram Panchayat Mission ke tahat hum {name} ko Rajasthan ki sabse aadhunik aur digital panchayat banane ke liye vachanbaddh hain.
-            </p>
-            <div className="flex gap-4">
-               <Link href="#" className="p-2.5 bg-white/5 rounded-lg hover:bg-blue-600 transition-all">
-                  <Facebook size={18} className="text-slate-400 hover:text-white" />
-               </Link>
-               <Link href="#" className="p-2.5 bg-white/5 rounded-lg hover:bg-pink-600 transition-all">
-                  <Instagram size={18} className="text-slate-400 hover:text-white" />
-               </Link>
-               <Link href="#" className="p-2.5 bg-white/5 rounded-lg hover:bg-sky-500 transition-all">
-                  <Twitter size={18} className="text-slate-400 hover:text-white" />
-               </Link>
-            </div>
-         </div>
+return (
 
-         {/* Column 2: Quick Navigation */}
-         <div className="space-y-6">
-            <h4 className="text-[10px] font-black uppercase tracking-[4px] text-slate-500 border-b border-white/5 pb-2">
-              Vibhag (Sections)
-            </h4>
-            <ul className="space-y-4">
-              {navLinks.map((link) => (
-                <li key={link.id}>
-                  <Link 
-                    href={`#${link.id}`} 
-                    className="text-[11px] font-black uppercase tracking-widest text-slate-400 hover:text-white flex items-center gap-2 group transition-all"
-                  >
-                    <ChevronRight size={14} style={{ color: themeColor }} className="group-hover:translate-x-1 transition-transform" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-         </div>
+<footer className="bg-gradient-to-b from-[#FAF9F6] to-[#F4EBD0] pt-12 pb-6 px-4">
 
-         {/* Column 3: Official Contact */}
-         <div className="space-y-6">
-            <h4 className="text-[10px] font-black uppercase tracking-[4px] text-slate-500 border-b border-white/5 pb-2">
-              Sampark (Contact)
-            </h4>
-            <div className="space-y-6 text-[11px] font-black uppercase tracking-widest text-slate-400">
-               <div className="flex items-start gap-4">
-                  <MapPin size={18} style={{ color: themeColor }} className="shrink-0" />
-                  <p className="leading-relaxed">
-                    Gram Panchayat Karyalay, <br/>
-                    Block: {panchayat?.block}, <br/>
-                    Dist: {panchayat?.district}
-                  </p>
-               </div>
-               <div className="flex items-center gap-4">
-                  <Mail size={18} style={{ color: themeColor }} className="shrink-0" />
-                  <p className="lowercase hover:text-white transition-colors">{slug}@rajgram.in</p>
-               </div>
-               <div className="flex items-center gap-4">
-                  <PhoneCall size={18} style={{ color: themeColor }} className="shrink-0" />
-                  <p className="tracking-widest">+91-XXXXXXXXXX</p>
-               </div>
-            </div>
-         </div>
+<div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
 
-         {/* Column 4: Campaign Badge */}
-         {/* <div className="space-y-6">
-            <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-slate-800 to-slate-900 border border-white/5 shadow-2xl relative overflow-hidden group">
-               <ShieldCheck 
-                className="absolute -right-2 -bottom-2 opacity-10 group-hover:scale-110 transition-transform" 
-                size={100} 
-                style={{ color: themeColor }}
-               /> 
-               <h4 className="text-xl font-black uppercase mb-4 leading-tight italic">Naya <br/> Rajasthan</h4>
-               <p className="text-[10px] font-bold uppercase opacity-50 mb-6 leading-relaxed">
-                Gaon ki pragati hamara sankalp hai. Hamare mission se judiye.
-               </p>
-               <button 
-                className="w-full py-3 bg-white text-slate-900 rounded-2xl font-black uppercase text-[10px] tracking-widest shadow-xl hover:scale-105 transition-all"
-               >
-                Support {leaderName.split(' ')[0]}
-               </button>
-            </div>
-         </div> */}
+{/* BRAND */}
+<div>
+<div className="flex items-center gap-3 mb-3">
+<div
+className="w-10 h-10 rounded-lg flex items-center justify-center font-black text-white text-base"
+style={{ backgroundColor: themeColor }}
+>
+{name[0]}
+</div>
 
-      </div>
+<div>
+<h3 className="text-base font-black text-[#112F20]">{name}</h3>
+<p className="text-[9px] uppercase tracking-widest text-slate-500">
+Digital Panchayat
+</p>
+</div>
+</div>
 
-      {/* Bottom Copyright Bar */}
-      {/* <div className="max-w-7xl mx-auto pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <Heart size={16} className="text-red-500 animate-pulse" fill="currentColor" />
-            <p className="text-[10px] font-black uppercase text-slate-500 tracking-[3px]">
-                Developed by RajGram Engine © 2026
-            </p>
-          </div>
-          <div className="flex items-center gap-8 text-[9px] font-black uppercase text-slate-600 tracking-widest">
-            <span className="hover:text-white cursor-pointer transition-colors">Digital India</span>
-            <span className="hover:text-white cursor-pointer transition-colors">Privacy Policy</span>
-          </div>
-      </div> */}
-    </footer>
-  );
+<p className="text-xs text-slate-600 leading-snug max-w-xs">
+Digital Gram Panchayat Mission ke tahat hum apne gaon ko
+technology ke saath aage badha rahe hain.
+</p>
+
+<div className="flex gap-3 mt-3">
+<Link href="#" className="p-2 rounded-full bg-white shadow">
+<Facebook size={14}/>
+</Link>
+<Link href="#" className="p-2 rounded-full bg-white shadow">
+<Instagram size={14}/>
+</Link>
+<Link href="#" className="p-2 rounded-full bg-white shadow">
+<Twitter size={14}/>
+</Link>
+</div>
+</div>
+
+{/* LINKS */}
+<div>
+<h4 className="font-black uppercase text-[11px] tracking-widest text-[#112F20] mb-3">
+Sections
+</h4>
+
+<ul className="space-y-2 text-xs text-slate-600">
+{navLinks.map(link => (
+<li key={link.id}>
+<Link href={`#${link.id}`} className="flex items-center gap-2">
+<ChevronRight size={12} style={{ color: themeColor }} />
+{link.name}
+</Link>
+</li>
+))}
+</ul>
+</div>
+
+{/* CONTACT */}
+<div>
+<h4 className="font-black uppercase text-[11px] tracking-widest text-[#112F20] mb-3">
+Sampark
+</h4>
+
+<div className="space-y-3 text-xs text-slate-600">
+
+<div className="flex gap-2">
+<MapPin size={14} style={{ color: themeColor }} />
+<span>
+Gram Panchayat<br/>
+{panchayat?.block}
+</span>
+</div>
+
+<div className="flex gap-2">
+<Mail size={14} style={{ color: themeColor }} />
+<span>{slug}@rajgram.in</span>
+</div>
+
+<div className="flex gap-2">
+<PhoneCall size={14} style={{ color: themeColor }} />
+<span>+91-XXXXXXXXXX</span>
+</div>
+
+</div>
+</div>
+
+</div>
+
+{/* COPYRIGHT */}
+<div className="border-t border-black/10 mt-8 pt-3 text-center text-[10px] text-slate-400">
+© {new Date().getFullYear()} {name}
+</div>
+
+</footer>
+);
 }

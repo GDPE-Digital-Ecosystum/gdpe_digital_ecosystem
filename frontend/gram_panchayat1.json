@@ -55114,23 +55114,6 @@
     }
   },
   {
-    "gp_id": "9842",
-    "name": "कुजटी ",
-    "block": "लूनकसरण ",
-    "district": "बीकानेर ",
-    "division": null,
-    "slug": "कुजटी-लूनकसरण-बीकानेर",
-    "status": "idle",
-    "candidate_id": null,
-    "population": null,
-    "config": {
-      "themeColor": "#2d5a27",
-      "layout": "standard",
-      "banner": "https://via.placeholder.com/1200x400?text=%E0%A4%95%E0%A5%81%E0%A4%9C%E0%A4%9F%E0%A5%80%20",
-      "logo": "https://via.placeholder.com/150?text=Logo"
-    }
-  },
-  {
     "gp_id": "9843",
     "name": "कुजटी ",
     "block": "लूनकसरण ",
