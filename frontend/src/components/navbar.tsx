@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Menu, X, Facebook, Twitter, ArrowRight } from "lucide-react";
 
 // JSON Import
-import pageData from "@/app/data.json";
+// import pageData from "@/app/data.json";
 
 export default function Navbar() {
   const data = pageData.navbar; 
