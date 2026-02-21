@@ -14,6 +14,8 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { Points, PointMaterial, Float, MeshDistortMaterial, Sphere } from "@react-three/drei";
 import Footer from "./footer";
 import dynamic from "next/dynamic";
+import Navbar from "./navbar";
+
 
 
 // 🔥 OPTIMIZATION COMPONENT: Isse sirf dikhne wala Canvas hi chalega
@@ -193,18 +195,12 @@ const NewsCard = ({ item, panchayat }: { item: any; panchayat: any }) => (
 );
 
 export default function LeaderWebsiteClient({ panchayat, news }: { panchayat?: any; news?: any[] }) {
-    const themeColor = panchayat?.config?.themeColor || "#0055a4"; 
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isMounted, setIsMounted] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lightboxImg, setLightboxImg] = useState<string | null>(null);
-
-const PanchayatMap = dynamic(() => import("./PanchayatMap"), { 
-  ssr: false, // Map hamesha client side par chalega
-  loading: () => <div className="h-[400px] bg-slate-50 animate-pulse" /> 
-});
-  
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState({ name: "", phone: "", message: "" });
 
   useEffect(() => {
     setIsMounted(true);
@@ -212,6 +208,30 @@ const PanchayatMap = dynamic(() => import("./PanchayatMap"), {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const handleSupportSubmit = async (e: any) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const res = await fetch("/api/site/support", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...formData, slug: panchayat.slug }),
+      });
+      if (res.ok) {
+        alert("🙏 Dhanyawad! Aapka samarthan neta ji tak pahunch gaya hai.");
+        setFormData({ name: "", phone: "", message: "" });
+        setIsModalOpen(false);
+      }
+    } catch (err) { alert("❌ Fail!"); }
+    finally { setLoading(false); }
+  };
+
+  const formatDate = (dateString: string) => {
+    if (!dateString) return "";
+    const date = new Date(dateString);
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  };
 
   if (!isMounted) return null;
 
@@ -270,117 +290,12 @@ const PanchayatMap = dynamic(() => import("./PanchayatMap"), {
 )}
 
      {/* 🟢 NAVBAR - Optimized for Mobile (Connect hidden on mobile nav) */}
-<nav className={`fixed ${scrolled ? 'top-4' : globalAlert ? 'top-10' : 'lg:top-18'} left-1/2 -translate-x-1/2 w-[95%]  z-1000 transition-all duration-500`}>
-  <div className="bg-white/95 backdrop-blur-md rounded-xl shadow-2xl px-4 md:px-6 py-3 flex justify-between items-center border border-black/5">
-    
-    {/* 🍔 MOBILE HAMBURGER (Left) */}
-    <div className="lg:hidden flex items-center">
-      <button 
-        onClick={() => setIsMenuOpen(true)} 
-        className="p-2 text-[#112F20] hover:bg-slate-100 rounded-lg transition-all"
-      >
-        <Menu size={24} />
-      </button>
-    </div>
-
-    {/* 🏛️ LOGO AREA */}
-    <div className="flex items-center gap-3 flex-1 lg:flex-none justify-center lg:justify-start">
-     {panchayat?.config?.avatar && (
-  <img src={panchayat.config.avatar} className="h-8 w-8 md:h-10 md:w-10 object-cover rounded-full border-2 border-red-700/20" alt="Avatar" />
-)}
-      <div className="leading-none text-left">
-        <h1 className="text-xs md:text-sm font-black uppercase tracking-tighter Oswald">{name}</h1>
-        <span className="text-[7px] md:text-[8px] font-bold text-slate-400 tracking-[2px] uppercase">Digital Gram</span>
-      </div>
-    </div>
-
-    {/* 🖥️ DESKTOP NAV LINKS (Hidden on Mobile) */}
-    <div className="hidden lg:flex items-center gap-6 text-[10px] font-black uppercase tracking-widest text-[#112F20]">
-      {['Home', 'History', 'Geography', 'Economy', 'Gallery', 'News'].map(id => (
-        <a key={id} href={`#${id.toLowerCase()}`} className="hover:text-red-700 transition-colors relative group">
-          {id}
-          <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-red-700 transition-all group-hover:w-full"></span>
-        </a>
-      ))}
-    </div>
-
-    {/* 🔘 CONNECT BUTTON - 🔥 Yahan fix kiya hai: hidden lg:block (Mobile par gayab) */}
-    <button 
-      onClick={() => setIsModalOpen(true)} 
-      className="hidden lg:flex bg-[#112F20] text-white px-6 py-2.5 rounded-full text-[10px] font-black uppercase shadow-lg hover:bg-red-700 transition-all hover:scale-105"
-    >
-      Connect
-    </button>
-    
-    {/* Mobile placeholder for alignment when button is hidden */}
-    <div className="w-10 lg:hidden"></div>
-  </div>
-
-  {/* 📱 MOBILE OVERLAY MENU (Fixed Fit & No Blur) */}
-  <AnimatePresence>
-    {isMenuOpen && (
-      <>
-        {/* Backdrop (No blur) */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setIsMenuOpen(false)}
-          className="fixed inset-0 bg-black/60 z-2000 lg:hidden"
-        />
-        
-        {/* Sidebar (Top-Left Fitted) */}
-        <motion.div 
-          initial={{ x: "-100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "-100%" }}
-          transition={{ duration: 0.3, ease: "easeInOut" }}
-          className="fixed top-0 left-0 h-screen w-[80%] max-w-75 bg-white shadow-2xl z-2001 lg:hidden flex flex-col p-6 text-left"
-        >
-          {/* 🔝 Connect Button ONLY here on Mobile */}
-          <div className="flex items-center justify-between mb-10 gap-3">
-            <button 
-              onClick={() => { setIsMenuOpen(false); setIsModalOpen(true); }}
-              className="flex-1 bg-[#112F20] text-white py-3 rounded-xl font-black uppercase text-[10px] tracking-[2px] shadow-lg active:scale-95 transition-all flex items-center justify-center gap-2"
-            >
-              Connect <ArrowRight size={14} />
-            </button>
-            
-            <button 
-              onClick={() => setIsMenuOpen(false)} 
-              className="p-2.5 bg-slate-100 text-[#112F20] rounded-xl hover:bg-red-700 hover:text-white transition-all"
-            >
-              <X size={20} />
-            </button>
-          </div>
-
-          {/* Links */}
-          <div className="flex flex-col gap-1 overflow-y-auto">
-            {['Home', 'History', 'Development', 'Geography', 'Economy', 'Gallery', 'News'].map((id, idx) => (
-              <motion.a
-                initial={{ opacity: 0, x: -10 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.05 * idx }}
-                key={id}
-                href={`#${id.toLowerCase()}`}
-                onClick={() => setIsMenuOpen(false)}
-                className="py-4 px-4 rounded-xl text-sm font-bold uppercase tracking-widest text-[#112F20] hover:bg-slate-50 transition-all flex items-center justify-between group Oswald"
-              >
-                {id}
-                <ChevronRight size={14} className="text-slate-200 group-hover:text-red-700" />
-              </motion.a>
-            ))}
-          </div>
-
-          <div className="mt-auto pt-6 border-t border-slate-100 flex items-center gap-3">
-             <Landmark size={16} className="text-red-700" />
-             <p className="text-[9px] font-black uppercase text-[#112F20] Oswald">{name}</p>
-          </div>
-        </motion.div>
-      </>
-    )}
-  </AnimatePresence>
-</nav>
+<Navbar 
+  panchayat={panchayat} 
+  scrolled={scrolled} 
+  globalAlert={globalAlert} 
+  setIsModalOpen={setIsModalOpen} 
+/>
 
 {/* 1. HOME / HERO SECTION - Centered and Notch Proof */}
 <section 
@@ -861,7 +776,43 @@ const PanchayatMap = dynamic(() => import("./PanchayatMap"), {
         {isModalOpen && (
           <div className="fixed inset-0 z-2000 flex items-center justify-center p-4">
             <div onClick={() => setIsModalOpen(false)} className="absolute inset-0 bg-[#112F20]/95 backdrop-blur-md" />
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative w-full max-w-xl bg-white rounded-[3rem] p-12 shadow-2xl"><button className="absolute top-8 right-8 text-slate-300" onClick={() => setIsModalOpen(false)}><X size={32}/></button><h2 className="text-4xl font-black mb-8 italic">Support Now</h2><form className="space-y-4"><input type="text" placeholder="Full Name" className="w-full p-5 rounded-2xl border-2 font-bold" /><input type="tel" placeholder="Mobile" className="w-full p-5 rounded-2xl border-2 font-bold" /><textarea placeholder="Message..." className="w-full p-5 rounded-2xl border-2 h-32 font-bold" /><button className="w-full py-6 bg-[#112F20] text-white font-black uppercase rounded-2xl shadow-xl">SUBMIT</button></form></motion.div>
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="relative w-full max-w-xl bg-white rounded-[3rem] p-12 shadow-2xl"><button className="absolute top-8 right-8 text-slate-300" onClick={() => setIsModalOpen(false)}><X size={32}/></button><h2 className="text-4xl font-black mb-8 italic">Support Now</h2>{/* --- 1. Form tag dhundo aur onSubmit jodo --- */}
+<form onSubmit={handleSupportSubmit} className="space-y-4">
+    <input 
+        required 
+        type="text" 
+        placeholder="Full Name" 
+        value={formData.name} 
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        className="w-full p-4 rounded-xl border-2 font-bold focus:border-red-700 outline-none text-slate-800 Oswald" 
+    />
+    
+    <input 
+        required 
+        type="tel" 
+        placeholder="Mobile" 
+        value={formData.phone} 
+        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+        className="w-full p-4 rounded-xl border-2 font-bold focus:border-red-700 outline-none text-slate-800 Oswald" 
+    />
+    
+    <textarea 
+        required 
+        placeholder="Message..." 
+        value={formData.message} 
+        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+        className="w-full p-4 rounded-xl border-2 h-32 font-bold focus:border-red-700 outline-none resize-none text-slate-800 Oswald" 
+    />
+
+    {/* --- 2. Button ka type 'submit' hona chahiye --- */}
+    <button 
+        type="submit" 
+        disabled={loading} 
+        className="w-full py-5 bg-[#112F20] text-white font-black uppercase rounded-2xl shadow-xl hover:bg-red-700 transition-all Oswald"
+    >
+        {loading ? "Wait..." : "Submit Support"}
+    </button>
+</form></motion.div>
           </div>
         )}
         {lightboxImg && (
