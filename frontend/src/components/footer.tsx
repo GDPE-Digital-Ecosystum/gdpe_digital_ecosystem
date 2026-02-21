@@ -7,7 +7,10 @@ import {
   MapPin,
   Mail,
   PhoneCall,
-  ChevronRight
+  ChevronRight,
+  TwitterIcon,
+  InstagramIcon,
+  FacebookIcon
 } from "lucide-react";
 
 export default function Footer({ panchayat }) {
@@ -55,13 +58,13 @@ technology ke saath aage badha rahe hain.
 
 <div className="flex gap-3 mt-3">
 <Link href="#" className="p-2 rounded-full bg-white shadow">
-<Facebook size={14}/>
+<FacebookIcon size={14}/>
 </Link>
 <Link href="#" className="p-2 rounded-full bg-white shadow">
-<Instagram size={14}/>
+<InstagramIcon size={14}/>
 </Link>
 <Link href="#" className="p-2 rounded-full bg-white shadow">
-<Twitter size={14}/>
+<TwitterIcon size={14}/>
 </Link>
 </div>
 </div>

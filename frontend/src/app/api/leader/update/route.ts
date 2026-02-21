@@ -80,7 +80,21 @@ export async function POST(req: Request) {
             "config.geographyImg": body.geographyImg,
             "config.economyImg": body.economyImg,
             "config.gallery": body.gallery || [],
-            "config.videos": body.videos || []
+            "config.videos": body.videos || [],
+//               "secretary_name": "Chandra Prakash",
+//   "secretary_phone": "98290XXXXX",
+//   "secretary_email": "sec@raj.gov.in",
+//   "assets": [
+//     { 
+//       "id": 1, 
+//       "name": "Naya School Bhawan", 
+//       "cat": "Education", 
+//       "cost": "₹25 Lakh", 
+//       "lat": 25.2138, 
+//       "lng": 74.6355, 
+//       "img": "cloudinary_url" 
+//     }
+//   ]
         };
 
         console.log("🛠️ Attempting update for slug:", decodedSlug);
